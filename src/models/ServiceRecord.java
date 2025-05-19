@@ -4,6 +4,9 @@
  */
 package models;
 
+import java.util.List;
+import services.ServiceDetailService;
+
 /**
  *
  * @author HP
@@ -14,6 +17,9 @@ public class ServiceRecord {
     private String type;
     private String description;
     private double cost;
+
+    public ServiceRecord() {
+    }
     
     public ServiceRecord(int vehicleId, String type, String description, double cost) {
         this.vehicleId = vehicleId;
@@ -68,6 +74,12 @@ public class ServiceRecord {
 
     public void setCost(double cost) {
         this.cost = cost;
+    }
+    
+    public List<ServiceDetail> getDetails() {
+        ServiceDetailService sds = new ServiceDetailService();
+        // Pastikan panggil getId(), bukan direct this.id
+        return sds.getByServiceId(this.getId());
     }
     
 }

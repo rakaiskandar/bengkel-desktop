@@ -93,5 +93,5 @@ public class ServiceDetailService implements ServiceDetailInterface {
         String sql = "DELETE FROM service_spare_parts WHERE id = ?";
         return db.executeUpdate(sql, id) > 0;
     }
-
+    
 }

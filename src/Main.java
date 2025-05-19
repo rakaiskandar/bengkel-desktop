@@ -1,13 +1,13 @@
 import javax.swing.JFrame;
-import views.LoginView;
+import views.Login;
 
 /**
  *
- * @author musa
+ * @author HP
  */
 public class Main {
     public static void main(String[] args) {
-        JFrame frame = new LoginView();
+        JFrame frame = new Login();
         frame.setTitle("Login");
         frame.setVisible(true);
     }

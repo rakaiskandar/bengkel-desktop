@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package services;
 
 import utils.Hash;
@@ -10,10 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import models.User;
 
-/**
- *
- * @author HP
- */
 public class UserService {
     private final Database db;
 
@@ -21,40 +13,54 @@ public class UserService {
         db = new Database();
         createDefaultAdmin();
     }
-    
+
     private void createDefaultAdmin() {
-        String checkQuery = "SELECT * FROM users WHERE username = ?";
-        try {
-            ResultSet rs = db.selectQuery(checkQuery, "admin");
+        final String defaultUsername = "admin";
+        final String defaultPassword = "ADMIN1#3";
+
+        // Hanya 1 placeholder → username
+        String checkQuery
+                = "SELECT username, password FROM users WHERE username = ?";
+        try ( ResultSet rs = db.selectQuery(checkQuery, defaultUsername)) {
             if (!rs.next()) {
-                String insertQuery = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
-                String hashed = Hash.HashPassword("ADMIN1#3");
-                db.executeUpdate(insertQuery, "admin", hashed, "admin");
-                System.out.println("Admin user created with username: admin and password: admin123");
+                // Hanya 2 placeholder → username & password
+                String insertQuery
+                        = "INSERT INTO users (username, password) VALUES (?, ?)";
+                String hashed = Hash.HashPassword(defaultPassword);
+
+                db.executeUpdate(insertQuery, defaultUsername, hashed);
+                System.out.println(
+                        "Admin user created — username: "
+                        + defaultUsername
+                        + ", password: "
+                        + defaultPassword
+                );
             }
         } catch (SQLException e) {
-            System.out.println("Error saat cek/admin insert: " + e.getMessage());
+            System.err.println("Error saat cek/insert admin: " + e.getMessage());
         }
     }
-    
+
     public User login(String username, String password) {
-        String query = "SELECT username, password FROM users WHERE username = ? AND password = ?";
-        
-        try {
-            ResultSet rs = db.selectQuery(query, username);
-            
+        // Hanya 1 placeholder → username
+        String query
+                = "SELECT password FROM users WHERE username = ?";
+
+        try ( ResultSet rs = db.selectQuery(query, username)) {
             if (rs.next()) {
                 String storedHash = rs.getString("password");
                 String inputHash = Hash.HashPassword(password);
 
                 if (storedHash.equals(inputHash)) {
+                    // Login sukses
                     return new User(username, storedHash);
                 }
             }
         } catch (SQLException e) {
-            System.out.println("Login error: " + e.getMessage());
+            System.err.println("Login error: " + e.getMessage());
         }
-        
+
+        // Login gagal
         return null;
     }
 }

@@ -10,7 +10,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import models.ServiceDetail;
 import models.ServiceRecord;
+import models.SparePart;
 /**
  *
  * @author HP
@@ -79,7 +81,7 @@ public class ServiceRecordService implements ServiceRecordInterface {
 
     @Override
     public boolean addService(ServiceRecord sr) {
-         String sql = "INSERT INTO services (vehicle_id, type, description, cost) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO services (vehicle_id, type, description, cost) VALUES (?, ?, ?, ?)";
         return db.executeUpdate(sql, sr.getVehicleId(), sr.getType(), sr.getDescription(), sr.getCost()) > 0;
     }
 
@@ -93,6 +95,17 @@ public class ServiceRecordService implements ServiceRecordInterface {
     public boolean deleteService(int id) {
         String sql = "DELETE FROM services WHERE id = ?";
         return db.executeUpdate(sql, id) > 0;
+    }
+
+    public double calculateSpareCost() {
+        ServiceRecord sds = new ServiceRecord();
+        SparePartService sps = new SparePartService();
+        double total = 0;
+        for (ServiceDetail d : sds.getDetails()) {
+            SparePart part = sps.getSparePartById(d.getSparePartId());
+            total += part.getPrice() * d.getQuantity();
+        }
+        return total;
     }
     
 }
