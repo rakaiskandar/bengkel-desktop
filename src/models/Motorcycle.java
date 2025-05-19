@@ -8,6 +8,15 @@ package models;
  *
  * @author HP
  */
-public class Motorcycle {
+public class Motorcycle extends Vehicle {
+    
+    public Motorcycle(int id, int customerId, String model, String licensePlate) {
+        super(id, customerId, "Motorcycle", model, licensePlate);
+    }
+
+    @Override
+    public void printVehicleInfo() {
+        System.out.println("Motor - Model: " + model + ", Plat: " + licensePlate);
+    }
     
 }

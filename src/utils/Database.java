@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package services;
+package utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -19,7 +19,7 @@ public class Database {
 
     public Database() {
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_mahasiswa", "root", "");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/sistem_bengkel", "root", "");
         } catch (SQLException e) {
             throw new RuntimeException("Error saat menghubungkan database: " + e.getMessage(), e);
         } 
