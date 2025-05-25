@@ -4,11 +4,29 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Raka%20Iskandar/Netbeans%20Projects%20Java/bengkel-desktop/src/Main.java</file>
+            <file>file:/D:/Raka%20Iskandar/Netbeans%20Projects%20Java/bengkel-desktop/src/interfaces/CustomerInterface.java</file>
+            <file>file:/D:/Raka%20Iskandar/Netbeans%20Projects%20Java/bengkel-desktop/src/services/CustomerService.java</file>
+            <file>file:/D:/Raka%20Iskandar/Netbeans%20Projects%20Java/bengkel-desktop/src/models/Motorcycle.java</file>
             <file>file:/D:/Raka%20Iskandar/Netbeans%20Projects%20Java/bengkel-desktop/src/views/ServiceFormView.java</file>
+            <file>file:/D:/Raka%20Iskandar/Netbeans%20Projects%20Java/bengkel-desktop/src/models/User.java</file>
+            <file>file:/D:/Raka%20Iskandar/Netbeans%20Projects%20Java/bengkel-desktop/src/interfaces/ServiceDetailInterface.java</file>
+            <file>file:/D:/Raka%20Iskandar/Netbeans%20Projects%20Java/bengkel-desktop/src/services/ServiceRecordService.java</file>
+            <file>file:/D:/Raka%20Iskandar/Netbeans%20Projects%20Java/bengkel-desktop/src/models/ServiceDetail.java</file>
+            <file>file:/D:/Raka%20Iskandar/Netbeans%20Projects%20Java/bengkel-desktop/src/models/Car.java</file>
+            <file>file:/D:/Raka%20Iskandar/Netbeans%20Projects%20Java/bengkel-desktop/src/services/ServiceDetailService.java</file>
+            <file>file:/D:/Raka%20Iskandar/Netbeans%20Projects%20Java/bengkel-desktop/src/models/SparePart.java</file>
             <file>file:/D:/Raka%20Iskandar/Netbeans%20Projects%20Java/bengkel-desktop/src/views/DashboardView.java</file>
-            <file>file:/D:/Raka%20Iskandar/Netbeans%20Projects%20Java/bengkel-desktop/src/services/DatabaseConnection.java</file>
-            <file>file:/D:/Raka%20Iskandar/Netbeans%20Projects%20Java/bengkel-desktop/src/views/LoginView.java</file>
+            <file>file:/D:/Raka%20Iskandar/Netbeans%20Projects%20Java/bengkel-desktop/src/services/UserService.java</file>
+            <file>file:/D:/Raka%20Iskandar/Netbeans%20Projects%20Java/bengkel-desktop/src/services/SparePartService.java</file>
+            <file>file:/D:/Raka%20Iskandar/Netbeans%20Projects%20Java/bengkel-desktop/src/interfaces/ServiceRecordInterface.java</file>
+            <file>file:/D:/Raka%20Iskandar/Netbeans%20Projects%20Java/bengkel-desktop/src/models/ServiceRecord.java</file>
+            <file>file:/D:/Raka%20Iskandar/Netbeans%20Projects%20Java/bengkel-desktop/src/Main.java</file>
+            <file>file:/D:/Raka%20Iskandar/Netbeans%20Projects%20Java/bengkel-desktop/src/utils/Hash.java</file>
+            <file>file:/D:/Raka%20Iskandar/Netbeans%20Projects%20Java/bengkel-desktop/src/interfaces/SparePartInterface.java</file>
+            <file>file:/D:/Raka%20Iskandar/Netbeans%20Projects%20Java/bengkel-desktop/src/utils/Invoice.java</file>
+            <file>file:/D:/Raka%20Iskandar/Netbeans%20Projects%20Java/bengkel-desktop/src/models/Customer.java</file>
+            <file>file:/D:/Raka%20Iskandar/Netbeans%20Projects%20Java/bengkel-desktop/src/utils/Database.java</file>
+            <file>file:/D:/Raka%20Iskandar/Netbeans%20Projects%20Java/bengkel-desktop/src/views/Login.java</file>
         </group>
     </open-files>
 </project-private>
