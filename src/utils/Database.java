@@ -9,6 +9,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.sql.rowset.CachedRowSet;
+import javax.sql.rowset.RowSetProvider;
 
 /**
  *
@@ -25,36 +27,50 @@ public class Database {
         } 
     }
     
-    public ResultSet selectQuery(String sql, Object... params) {
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+    public CachedRowSet selectQuery(String sql, Object... params) {
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            // set parameters
             for (int i = 0; i < params.length; i++) {
-                preparedStatement.setObject(i + 1, params[i]);
+                ps.setObject(i + 1, params[i]);
             }
-            return preparedStatement.executeQuery();
+            try (ResultSet rs = ps.executeQuery()) {
+                // populate CachedRowSet
+                CachedRowSet crs = RowSetProvider
+                  .newFactory()
+                  .createCachedRowSet();
+                crs.populate(rs);
+                return crs;
+            }
         } catch (SQLException e) {
-            throw new RuntimeException("Error saat menjalankan select query: " + e.getMessage(), e);
+            throw new RuntimeException(
+              "Error saat menjalankan select query: " + e.getMessage(), e
+            );
         }
     }
-    
+
     public int executeUpdate(String sql, Object... params) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            // set parameters
             for (int i = 0; i < params.length; i++) {
-                preparedStatement.setObject(i + 1, params[i]);
+                ps.setObject(i + 1, params[i]);
             }
-            return preparedStatement.executeUpdate();
+            return ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Error saat menjalankan update query: " + e.getMessage(), e);
+            throw new RuntimeException(
+              "Error saat menjalankan update query: " + e.getMessage(), e
+            );
         }
     }
-    
+
     public void closeConnection() {
         try {
-            if (connection != null) {
+            if (connection != null && !connection.isClosed()) {
                 connection.close();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Eror saat menutup koneksi database: " + e.getMessage(), e);
+            throw new RuntimeException(
+              "Error saat menutup koneksi database: " + e.getMessage(), e
+            );
         }
     }
 }
