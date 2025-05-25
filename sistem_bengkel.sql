@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 25, 2025 at 11:44 AM
+-- Generation Time: May 25, 2025 at 05:05 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,44 @@ SET time_zone = "+00:00";
 --
 -- Database: `sistem_bengkel`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `spare_parts`
+--
+
+CREATE TABLE `spare_parts` (
+  `id` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `price` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `spare_parts`
+--
+
+INSERT INTO `spare_parts` (`id`, `name`, `price`) VALUES
+(1, 'Busi (Motor & Mobil)', 95000),
+(2, 'Filter Oli (Mobil)', 80000),
+(3, 'Filter Udara (Motor)', 40000),
+(4, 'Kampas Rem Depan (Mobil)', 300000),
+(5, 'Kampas Rem Belakang (Motor)', 75000),
+(6, 'Aki/Baterai (Mobil)', 1000000),
+(7, 'Aki/Baterai (Motor)', 250000),
+(8, 'Lampu Depan/Headlamp (Motor)', 125000),
+(9, 'Lampu Depan/Headlamp (Mobil)', 1500000),
+(10, 'Oli Mesin 1L (Mobil)', 125000),
+(11, 'Oli Mesin 0.8L (Motor)', 75000),
+(12, 'Ban Depan (Motor)', 300000),
+(13, 'Ban Depan (Mobil)', 800000),
+(14, 'Shockbreaker Belakang (Motor)', 600000),
+(15, 'Shockbreaker Depan (Mobil)', 1500000),
+(16, 'Rantai + Gir Set (Motor)', 300000),
+(17, 'Timing Belt (Mobil)', 750000),
+(18, 'V-Belt (Motor)', 200000),
+(19, 'Radiator (Mobil)', 1500000),
+(20, 'CDI Unit (Motor)', 350000);
 
 -- --------------------------------------------------------
 
@@ -45,6 +83,12 @@ INSERT INTO `users` (`id`, `username`, `password`) VALUES
 --
 
 --
+-- Indexes for table `spare_parts`
+--
+ALTER TABLE `spare_parts`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -53,6 +97,12 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `spare_parts`
+--
+ALTER TABLE `spare_parts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `users`
