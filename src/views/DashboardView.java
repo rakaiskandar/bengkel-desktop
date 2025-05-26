@@ -73,7 +73,6 @@ public class DashboardView extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Dashboard - Home");
-        setPreferredSize(new java.awt.Dimension(1280, 720));
         getContentPane().setLayout(null);
 
         jPanel1.setBackground(new java.awt.Color(0, 101, 211));
@@ -175,7 +174,7 @@ public class DashboardView extends javax.swing.JFrame {
         getContentPane().add(jPanel1);
         jPanel1.setBounds(0, 0, 280, 840);
 
-        jPanel3.setBackground(new java.awt.Color(51, 255, 51));
+        jPanel3.setBackground(new java.awt.Color(153, 153, 153));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -224,7 +223,7 @@ public class DashboardView extends javax.swing.JFrame {
         getContentPane().add(jPanel7);
         jPanel7.setBounds(280, 0, 1270, 108);
 
-        jPanel10.setBackground(new java.awt.Color(51, 255, 51));
+        jPanel10.setBackground(new java.awt.Color(153, 153, 153));
 
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
         jPanel10.setLayout(jPanel10Layout);
@@ -240,7 +239,7 @@ public class DashboardView extends javax.swing.JFrame {
         getContentPane().add(jPanel10);
         jPanel10.setBounds(540, 140, 200, 110);
 
-        jPanel11.setBackground(new java.awt.Color(51, 255, 51));
+        jPanel11.setBackground(new java.awt.Color(153, 153, 153));
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
@@ -256,7 +255,7 @@ public class DashboardView extends javax.swing.JFrame {
         getContentPane().add(jPanel11);
         jPanel11.setBounds(310, 140, 200, 110);
 
-        jPanel12.setBackground(new java.awt.Color(51, 255, 51));
+        jPanel12.setBackground(new java.awt.Color(153, 153, 153));
 
         javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
         jPanel12.setLayout(jPanel12Layout);
@@ -281,6 +280,10 @@ public class DashboardView extends javax.swing.JFrame {
 
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
         // TODO add your handling code here:
+        SparepartView spv = new SparepartView();
+        spv.setLocationRelativeTo(null);
+        spv.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jLabel5MouseClicked
 
     private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
