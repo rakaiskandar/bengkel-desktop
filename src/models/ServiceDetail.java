@@ -8,7 +8,7 @@ package models;
  *
  * @author HP
  */
-public class ServiceDetail {
+public class ServiceDetail extends ServiceRecord {
     private int id;
     private int serviceId;
     private int sparePartId;

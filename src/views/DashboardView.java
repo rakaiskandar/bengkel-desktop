@@ -4,6 +4,8 @@
  */
 package views;
 
+import models.Session;
+
 /**
  *
  * @author HP
@@ -15,6 +17,8 @@ public class DashboardView extends javax.swing.JFrame {
      */
     public DashboardView() {
         initComponents();
+        String username = Session.getUser().getUsername();
+        jLabel8.setText("Selamata datang, " + username);
     }
 
     /**
@@ -73,6 +77,7 @@ public class DashboardView extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Dashboard - Home");
+        setPreferredSize(new java.awt.Dimension(1280, 850));
         getContentPane().setLayout(null);
 
         jPanel1.setBackground(new java.awt.Color(0, 101, 211));
@@ -276,6 +281,9 @@ public class DashboardView extends javax.swing.JFrame {
 
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
         // TODO add your handling code here:
+        Session.clear();
+        new Login().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jLabel3MouseClicked
 
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked

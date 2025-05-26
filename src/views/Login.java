@@ -7,6 +7,7 @@ package views;
 
 import services.UserService;
 import javax.swing.*;
+import models.Session;
 import models.User;
 /**
  *
@@ -115,6 +116,7 @@ public class Login extends javax.swing.JFrame {
                 null,
                 "Login Berhasil, selamat datang " + logged.getUsername()
             );
+            Session.setUser(logged);
             new DashboardView().setVisible(true);
             this.dispose(); // Tutup jendela login
         } else {
