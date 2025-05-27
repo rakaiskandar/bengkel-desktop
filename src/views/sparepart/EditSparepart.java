@@ -2,101 +2,74 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package views;
+package views.sparepart;
 
+import views.SparepartView;
+import views.*;
 import java.util.List;
-import views.sparepart.AddSparepart;
+import services.SparePartService;
+import models.SparePart;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
-
 /**
  *
  * @author HP
  */
-public class SparepartView extends javax.swing.JFrame {
-
+public class EditSparepart extends javax.swing.JFrame {
+    private int sparepartId;
     /**
      * Creates new form Dashboard
      */
-    public SparepartView() {
+    public EditSparepart() {
         initComponents();
-        // Setup table model
-        jTable1.getColumnModel().getColumn(0).setPreferredWidth(30);
-        String[] columnNames = {"ID", "Name", "Price"};
-
-        services.SparePartService sparePartService = new services.SparePartService();
-        List<models.SparePart> spareParts = sparePartService.getAllSpareParts();
-
-        Object[][] data = new Object[spareParts.size()][3];
-        for (int i = 0; i < spareParts.size(); i++) {
-            models.SparePart part = spareParts.get(i);
-            data[i][0] = part.getId();
-            data[i][1] = part.getName();
-            data[i][2] = part.getPrice();
-        }
-
-        DefaultTableModel model = new DefaultTableModel(data, columnNames) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-
-        jTable1.setModel(model);
-        jTable1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-
-        // Pasang action listener tombol
-        jButton1.addActionListener(e -> openAddSparepart());
-        jButton2.addActionListener(e -> openEditSparepart());
-        jButton3.addActionListener(e -> deleteSelectedRow());
-
-        // DELETE dengan tombol keyboard DELETE
-        jTable1.addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override
-            public void keyPressed(java.awt.event.KeyEvent e) {
-                if (e.getKeyCode() == java.awt.event.KeyEvent.VK_DELETE) {
-                    deleteSelectedRow();
-                }
-            }
-        });
+        jButton1.addActionListener(e -> saveData());
+        
+    }
+    public EditSparepart(int id) {
+        this();
+        this.sparepartId = id;
+        loadData(id);
     }
 
-// Method untuk membuka form AddSparepart
-    private void openAddSparepart() {
-        new views.sparepart.AddSparepart().setVisible(true);
-        this.dispose();
-    }
-
-// Method untuk membuka form EditSparepart dengan ID yang dipilih
-    private void openEditSparepart() {
-        int selectedRow = jTable1.getSelectedRow();
-        if (selectedRow != -1) {
-            int id = Integer.parseInt(jTable1.getModel().getValueAt(selectedRow, 0).toString());
-            new views.sparepart.EditSparepart(id).setVisible(true);
-            this.dispose();
+    private void loadData(int id) {
+        SparePartService service = new SparePartService();
+        SparePart sp = service.getSparePartById(id);
+        if (sp != null) {
+            jTextField2.setText(sp.getName());
+            jTextField1.setText(String.valueOf(sp.getPrice()));
         } else {
-            JOptionPane.showMessageDialog(this, "Pilih baris yang ingin diedit.");
+            JOptionPane.showMessageDialog(this, "Data sparepart tidak ditemukan.", "Error", JOptionPane.ERROR_MESSAGE);
+            dispose();
         }
     }
 
-// Method untuk menghapus baris yang dipilih
-    private void deleteSelectedRow() {
-        int selectedRow = jTable1.getSelectedRow();
-        if (selectedRow != -1) {
-            int confirm = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin menghapus data ini?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                int id = Integer.parseInt(jTable1.getModel().getValueAt(selectedRow, 0).toString());
-                services.SparePartService sparePartService = new services.SparePartService();
-                boolean success = sparePartService.deleteSparePart(id);
-                if (success) {
-                    ((DefaultTableModel) jTable1.getModel()).removeRow(selectedRow);
-                    JOptionPane.showMessageDialog(this, "Data berhasil dihapus.");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Gagal menghapus data.");
-                }
+    private void saveData() {
+        String name = jTextField2.getText();
+        String priceStr = jTextField1.getText();
+
+        if (name.isEmpty() || priceStr.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nama dan harga wajib diisi!", "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            double price = Double.parseDouble(priceStr);
+            SparePart sp = new SparePart(name, price);
+            sp.setId(sparepartId);
+            sp.setName(name);
+            sp.setPrice(price);
+
+            SparePartService service = new SparePartService();
+            boolean success = service.updateSparePart(sp);
+
+            if (success) {
+                JOptionPane.showMessageDialog(this, "Data berhasil disimpan.");
+                dispose();
+                new SparepartView().setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Gagal menyimpan data.", "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } else {
-            JOptionPane.showMessageDialog(this, "Pilih baris yang ingin dihapus.");
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Harga harus berupa angka.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -123,11 +96,11 @@ public class SparepartView extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -292,44 +265,37 @@ public class SparepartView extends javax.swing.JFrame {
         getContentPane().add(jPanel7);
         jPanel7.setBounds(280, 0, 1270, 108);
 
-        jTable1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
-
-        getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(312, 142, 790, 370);
-
-        jButton1.setText("ADD");
+        jButton1.setText("UPDATE");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
         getContentPane().add(jButton1);
-        jButton1.setBounds(310, 530, 72, 23);
+        jButton1.setBounds(330, 230, 90, 23);
 
-        jButton2.setText("EDIT");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel9.setText("Price");
+        getContentPane().add(jLabel9);
+        jLabel9.setBounds(330, 180, 60, 30);
+
+        jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        getContentPane().add(jTextField1);
+        jTextField1.setBounds(410, 180, 230, 30);
+
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel10.setText("Name");
+        getContentPane().add(jLabel10);
+        jLabel10.setBounds(330, 140, 60, 30);
+
+        jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                jTextField2ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton2);
-        jButton2.setBounds(420, 530, 72, 23);
-
-        jButton3.setText("DELLETE");
-        getContentPane().add(jButton3);
-        jButton3.setBounds(530, 530, 100, 23);
+        getContentPane().add(jTextField2);
+        jTextField2.setBounds(410, 140, 230, 30);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -362,9 +328,9 @@ public class SparepartView extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_jTextField2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -383,14 +349,26 @@ public class SparepartView extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SparepartView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EditSparepart.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SparepartView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EditSparepart.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SparepartView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EditSparepart.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SparepartView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EditSparepart.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -399,7 +377,7 @@ public class SparepartView extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                SparepartView view = new SparepartView();
+                EditSparepart view = new EditSparepart();
                 view.setVisible(true);
             }
         });
@@ -407,11 +385,10 @@ public class SparepartView extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JFrame jFrame2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -419,11 +396,12 @@ public class SparepartView extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 }

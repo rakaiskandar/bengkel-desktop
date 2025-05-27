@@ -16,7 +16,8 @@ import utils.Database;
  *
  * @author HP
  */
-public class SparePartService implements SparePartInterface{
+public class SparePartService implements SparePartInterface {
+
     private final Database db = new Database();
 
     @Override
@@ -26,9 +27,9 @@ public class SparePartService implements SparePartInterface{
             ResultSet rs = db.selectQuery(sql, id);
             if (rs.next()) {
                 return new SparePart(
-                    rs.getInt("id"),
-                    rs.getString("name"),
-                    rs.getDouble("price")
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getDouble("price")
                 );
             }
         } catch (SQLException e) {
@@ -44,9 +45,9 @@ public class SparePartService implements SparePartInterface{
         try (ResultSet rs = db.selectQuery(sql)) {
             while (rs.next()) {
                 list.add(new SparePart(
-                    rs.getInt("id"),
-                    rs.getString("name"),
-                    rs.getDouble("price")
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getDouble("price")
                 ));
             }
         } catch (SQLException e) {
@@ -63,8 +64,8 @@ public class SparePartService implements SparePartInterface{
 
     @Override
     public boolean updateSparePart(SparePart part) {
-        String sql = "INSERT INTO spare_parts (name, price) VALUES (?, ?)";
-        return db.executeUpdate(sql, part.getName(), part.getPrice()) > 0;
+        String sql = "UPDATE spare_parts SET name = ?, price = ? WHERE id = ?";
+        return db.executeUpdate(sql, part.getName(), part.getPrice(), part.getId()) > 0;
     }
 
     @Override
@@ -72,5 +73,5 @@ public class SparePartService implements SparePartInterface{
         String sql = "DELETE FROM spare_parts WHERE id = ?";
         return db.executeUpdate(sql, id) > 0;
     }
-    
+
 }
