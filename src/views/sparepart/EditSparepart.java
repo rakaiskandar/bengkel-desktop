@@ -10,20 +10,27 @@ import java.util.List;
 import services.SparePartService;
 import models.SparePart;
 import javax.swing.JOptionPane;
+import models.Session;
+
 /**
  *
  * @author HP
  */
 public class EditSparepart extends javax.swing.JFrame {
+
     private int sparepartId;
+
     /**
      * Creates new form Dashboard
      */
     public EditSparepart() {
         initComponents();
+        String username = Session.getUser().getUsername();
+        jLabel8.setText("Selamat datang, " + username);
         jButton1.addActionListener(e -> saveData());
-        
+
     }
+
     public EditSparepart(int id) {
         this();
         this.sparepartId = id;
