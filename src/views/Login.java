@@ -180,9 +180,6 @@ public class Login extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_bExitActionPerformed
 
-    private void bExitActionPerformed(java.awt.event.ActionEvent evt) {
-        System.exit(0);
-    }
     /**
      * @param args the command line arguments
      */
