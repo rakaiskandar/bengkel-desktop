@@ -22,6 +22,8 @@ public class SparepartView extends javax.swing.JFrame {
     public SparepartView() {
         initComponents();
         // Setup table model
+        String username = Session.getUser().getUsername();
+        jLabel8.setText("Selamat datang, " + username);
         jTable1.getColumnModel().getColumn(0).setPreferredWidth(30);
         String[] columnNames = {"ID", "Name", "Price"};
 

@@ -2,102 +2,57 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package views;
+package views.customer;
 
-import java.util.List;
+
+import views.*;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
+import models.Customer;
 import models.Session;
+import services.CustomerService;
 
 /**
  *
  * @author HP
  */
-public class CustomerView extends javax.swing.JFrame {
+public class AddCustomer extends javax.swing.JFrame {
 
     /**
      * Creates new form Dashboard
      */
-    public CustomerView() {
+    public AddCustomer() {
         initComponents();
         String username = Session.getUser().getUsername();
         jLabel8.setText("Selamat datang, " + username);
-        jTable1.getColumnModel().getColumn(0).setPreferredWidth(30);
-        String[] columnNames = {"ID", "Name", "Phone"};
-        
-        services.CustomerService CustomerService = new services.CustomerService();
-        List<models.Customer> Customer = CustomerService.getAllCustomers();
-        
-        Object[][] data = new Object[Customer.size()][3];
-        for (int i = 0; i < Customer.size(); i++) {
-            models.Customer part = Customer.get(i);
-            data[i][0] = part.getId();
-            data[i][1] = part.getName();
-            data[i][2] = part.getPhone();
+        jButton1.addActionListener(e -> saveData());
+    }
+
+    private void saveData() {
+        String name = jTextField2.getText();
+        String phoneStr = jTextField1.getText();
+
+        if (name.isEmpty() || phoneStr.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nama dan nomor wajib diisi!", "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
         }
-        
-        DefaultTableModel model = new DefaultTableModel(data, columnNames) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
+
+        try {
+            
+            Customer cs = new Customer(name, phoneStr);
+
+            CustomerService service = new CustomerService();
+            boolean success = service.addCustomer(cs);
+            
+
+            if (success) {
+                JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan.");
+                dispose();
+                new CustomerView().setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Gagal menambahkan data.", "Error", JOptionPane.ERROR_MESSAGE);
             }
-        };
-        
-        jTable1.setModel(model);
-        jTable1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-
-        // Pasang action listener tombol
-        jButton1.addActionListener(e -> openAddCustomer());
-        jButton2.addActionListener(e -> openEditCustomer());
-        jButton3.addActionListener(e -> deleteSelectedRow());
-
-        // DELETE dengan tombol keyboard DELETE
-        jTable1.addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override
-            public void keyPressed(java.awt.event.KeyEvent e) {
-                if (e.getKeyCode() == java.awt.event.KeyEvent.VK_DELETE) {
-                    deleteSelectedRow();
-                }
-            }
-        });
-    }
-
-    // Method untuk membuka form AddSparepart
-    private void openAddCustomer() {
-        new views.customer.AddCustomer().setVisible(true);
-        this.dispose();
-    }
-
-// Method untuk membuka form EditSparepart dengan ID yang dipilih
-    private void openEditCustomer() {
-        int selectedRow = jTable1.getSelectedRow();
-        if (selectedRow != -1) {
-            int id = Integer.parseInt(jTable1.getModel().getValueAt(selectedRow, 0).toString());
-            new views.customer.EditCustomer(id).setVisible(true);
-            this.dispose();
-        } else {
-            JOptionPane.showMessageDialog(this, "Pilih baris yang ingin diedit.");
-        }
-    }
-
-// Method untuk menghapus baris yang dipilih
-    private void deleteSelectedRow() {
-        int selectedRow = jTable1.getSelectedRow();
-        if (selectedRow != -1) {
-            int confirm = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin menghapus data ini?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                int id = Integer.parseInt(jTable1.getModel().getValueAt(selectedRow, 0).toString());
-                services.CustomerService customerService = new services.CustomerService();
-                boolean success = customerService.deleteCustomer(id);
-                if (success) {
-                    ((DefaultTableModel) jTable1.getModel()).removeRow(selectedRow);
-                    JOptionPane.showMessageDialog(this, "Data berhasil dihapus.");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Gagal menghapus data.");
-                }
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Pilih baris yang ingin dihapus.");
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Harga harus berupa angka.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -124,11 +79,11 @@ public class CustomerView extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -157,7 +112,7 @@ public class CustomerView extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Dashboard - Customer");
+        setTitle("Dashboard - Home");
         setPreferredSize(new java.awt.Dimension(1280, 720));
         getContentPane().setLayout(null);
 
@@ -187,14 +142,9 @@ public class CustomerView extends javax.swing.JFrame {
         });
 
         jLabel5.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("      Sparepart");
-        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel5MouseClicked(evt);
-            }
-        });
 
         jLabel6.setBackground(new java.awt.Color(0, 0, 0));
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -222,10 +172,14 @@ public class CustomerView extends javax.swing.JFrame {
         jLabel1.setText("SiBengkel");
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("      Customer");
-        jLabel2.setPreferredSize(new java.awt.Dimension(1280, 720));
+        jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel2MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -289,33 +243,27 @@ public class CustomerView extends javax.swing.JFrame {
         getContentPane().add(jPanel7);
         jPanel7.setBounds(280, 0, 1270, 108);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
-
-        getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(330, 140, 780, 450);
-
         jButton1.setText("ADD");
         getContentPane().add(jButton1);
-        jButton1.setBounds(330, 610, 76, 27);
+        jButton1.setBounds(330, 230, 76, 27);
 
-        jButton2.setText("EDIT");
-        getContentPane().add(jButton2);
-        jButton2.setBounds(440, 610, 76, 27);
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel9.setText("Phone");
+        getContentPane().add(jLabel9);
+        jLabel9.setBounds(330, 180, 60, 30);
 
-        jButton3.setText("DELETE");
-        getContentPane().add(jButton3);
-        jButton3.setBounds(550, 610, 100, 27);
+        jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        getContentPane().add(jTextField1);
+        jTextField1.setBounds(410, 180, 230, 30);
+
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel10.setText("Name");
+        getContentPane().add(jLabel10);
+        jLabel10.setBounds(330, 140, 60, 30);
+
+        jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        getContentPane().add(jTextField2);
+        jTextField2.setBounds(410, 140, 230, 30);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -327,15 +275,8 @@ public class CustomerView extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jLabel3MouseClicked
 
-    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
-        // TODO add your handling code here:
-        SparepartView spv = new SparepartView();
-        spv.setLocationRelativeTo(null);
-        spv.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_jLabel5MouseClicked
-
     private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
+        // TODO add your handling code here:
         VehicleView vhc = new VehicleView();
         vhc.setLocationRelativeTo(null);
         vhc.setVisible(true);
@@ -347,11 +288,20 @@ public class CustomerView extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel7MouseClicked
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
+        // TODO add your handling code here:
         DashboardView dsh = new DashboardView();
         dsh.setLocationRelativeTo(null);
         dsh.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel4MouseClicked
+
+    private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
+        // TODO add your handling code here:
+        CustomerView cst = new CustomerView();
+        cst.setLocationRelativeTo(null);
+        cst.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jLabel2MouseClicked
 
     /**
      * @param args the command line arguments
@@ -370,14 +320,26 @@ public class CustomerView extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CustomerView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AddCustomer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CustomerView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AddCustomer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CustomerView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AddCustomer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CustomerView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AddCustomer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -386,19 +348,18 @@ public class CustomerView extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                    CustomerView view = new CustomerView();
-                    view.setVisible(true);
+                AddCustomer view = new AddCustomer();
+                view.setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JFrame jFrame2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -406,11 +367,12 @@ public class CustomerView extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 }

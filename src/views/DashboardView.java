@@ -314,9 +314,9 @@ public class DashboardView extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel4MouseClicked
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
-        SparepartView spv = new SparepartView();
-        spv.setLocationRelativeTo(null);
-        spv.setVisible(true);
+        CustomerView ctv = new CustomerView();
+        ctv.setLocationRelativeTo(null);
+        ctv.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel2MouseClicked
 
