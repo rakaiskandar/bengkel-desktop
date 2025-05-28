@@ -42,9 +42,12 @@ public class Login extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(255, 255, 255));
 
+        lUsername.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lUsername.setText("Username");
 
+        lPassword.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lPassword.setText("Password");
 
         jUser.addActionListener(new java.awt.event.ActionListener() {
@@ -54,6 +57,7 @@ public class Login extends javax.swing.JFrame {
         });
 
         bLogin.setBackground(new java.awt.Color(0, 101, 211));
+        bLogin.setForeground(new java.awt.Color(255, 255, 255));
         bLogin.setText("Login");
         bLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -62,6 +66,7 @@ public class Login extends javax.swing.JFrame {
         });
 
         bExit.setBackground(new java.awt.Color(0, 101, 211));
+        bExit.setForeground(new java.awt.Color(255, 255, 255));
         bExit.setText("Exit");
         bExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -106,7 +111,7 @@ public class Login extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(49, 62, Short.MAX_VALUE)
+                .addGap(49, 58, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(bExit)
