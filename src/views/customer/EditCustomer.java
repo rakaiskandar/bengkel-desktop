@@ -268,7 +268,7 @@ public class EditCustomer extends javax.swing.JFrame {
 
         jButton1.setText("UPDATE");
         getContentPane().add(jButton1);
-        jButton1.setBounds(330, 230, 90, 27);
+        jButton1.setBounds(330, 230, 90, 23);
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel9.setText("Price");

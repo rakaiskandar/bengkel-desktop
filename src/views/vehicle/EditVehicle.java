@@ -2,57 +2,121 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package views.customer;
+package views.vehicle;
 
-
-import views.*;
+import views.VehicleView;
+import java.util.List;
+import services.VehicleService;
+import models.Vehicle;
 import javax.swing.JOptionPane;
+import models.Car;
 import models.Customer;
+import models.Motorcycle;
 import models.Session;
 import services.CustomerService;
+import views.CustomerView;
+import views.DashboardView;
+import views.Login;
 
 /**
  *
  * @author HP
  */
-public class AddCustomer extends javax.swing.JFrame {
+public class EditVehicle extends javax.swing.JFrame {
+
+    private int vehicleID;
 
     /**
      * Creates new form Dashboard
      */
-    public AddCustomer() {
+    public EditVehicle() {
         initComponents();
+        loadCustomers();
+        jComboBox2.setEnabled(false);
         String username = Session.getUser().getUsername();
         jLabel8.setText("Selamat datang, " + username);
         jButton1.addActionListener(e -> saveData());
+
+    }
+
+    private void loadCustomers() {
+        CustomerService customerService = new CustomerService();
+        List<Customer> customers = customerService.getAllCustomers();
+        jComboBox2.removeAllItems();
+        for (Customer c : customers) {
+            jComboBox2.addItem(c);  // tambahkan objek Customer langsung
+        }
+    }
+
+    public EditVehicle(int id) {
+        this();
+        this.vehicleID = id;
+        loadData(id);
+    }
+
+    private void loadData(int id) {
+        VehicleService service = new VehicleService();
+        Vehicle vh = service.getVehicleById(id);
+        if (vh != null) {
+            String type = vh.getType();
+            if (type.equals("Car")) {
+                jComboBox1.setSelectedItem("Mobil");
+            } else if (type.equals("Motorcycle")) {
+                jComboBox1.setSelectedItem("Motor");
+            }
+            jTextField3.setText(vh.getModel());
+            jTextField1.setText(vh.getLicensePlate());
+
+            // Pilih customer yang sesuai dari jComboBox2
+            for (int i = 0; i < jComboBox2.getItemCount(); i++) {
+                Customer c = (Customer) jComboBox2.getItemAt(i);
+                if (c.getId() == vh.getCustomerId()) {
+                    jComboBox2.setSelectedIndex(i);
+                    break;
+                }
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Data Kendaraan tidak ditemukan.", "Error", JOptionPane.ERROR_MESSAGE);
+            dispose();
+        }
     }
 
     private void saveData() {
-        String name = jTextField2.getText();
-        String phoneStr = jTextField1.getText();
+        String type = (String) jComboBox1.getSelectedItem();
+        String model = jTextField3.getText().trim();
+        String licensePlate = jTextField1.getText().trim();
+        Customer selectedCustomer = (Customer) jComboBox2.getSelectedItem();
 
-        if (name.isEmpty() || phoneStr.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Nama dan nomor wajib diisi!", "Warning", JOptionPane.WARNING_MESSAGE);
+        if (selectedCustomer == null) {
+            JOptionPane.showMessageDialog(this, "Pilih customer terlebih dahulu.", "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        int customerId = selectedCustomer.getId();
+
+        if (type == null || type.trim().isEmpty() || model.isEmpty() || licensePlate.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Tipe, Model, dan Plat Nomor wajib diisi!", "Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        try {
-            
-            Customer cs = new Customer(name, phoneStr);
+        Vehicle vh;
 
-            CustomerService service = new CustomerService();
-            boolean success = service.addCustomer(cs);
-            
+        if ("Mobil".equals(type)) {
+            // Jika ada class Car sebagai subclass Vehicle
+            vh = new Car(vehicleID, customerId, model, licensePlate);
+        } else {
+            vh = new Motorcycle(vehicleID, customerId, model, licensePlate);
+        }
 
-            if (success) {
-                JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan.");
-                dispose();
-                new CustomerView().setVisible(true);
-            } else {
-                JOptionPane.showMessageDialog(this, "Gagal menambahkan data.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Harga harus berupa angka.", "Error", JOptionPane.ERROR_MESSAGE);
+        VehicleService service = new VehicleService();
+        boolean success = service.updateVehicle(vh);
+
+        if (success) {
+            JOptionPane.showMessageDialog(this, "Data berhasil disimpan.");
+            dispose();
+            new VehicleView().setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Gagal menyimpan data.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -83,7 +147,11 @@ public class AddCustomer extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jLabel12 = new javax.swing.JLabel();
+        jTextField3 = new javax.swing.JTextField();
+        jComboBox2 = new javax.swing.JComboBox<>();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -243,27 +311,51 @@ public class AddCustomer extends javax.swing.JFrame {
         getContentPane().add(jPanel7);
         jPanel7.setBounds(280, 0, 1270, 108);
 
-        jButton1.setText("ADD");
+        jButton1.setText("UPDATE");
         getContentPane().add(jButton1);
-        jButton1.setBounds(330, 230, 72, 23);
+        jButton1.setBounds(330, 290, 90, 23);
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel9.setText("Phone");
+        jLabel9.setText("Plat Nomor");
         getContentPane().add(jLabel9);
-        jLabel9.setBounds(330, 180, 60, 30);
+        jLabel9.setBounds(330, 250, 90, 30);
 
         jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         getContentPane().add(jTextField1);
-        jTextField1.setBounds(410, 180, 230, 30);
+        jTextField1.setBounds(450, 250, 230, 30);
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel10.setText("Name");
+        jLabel10.setText("Customer");
         getContentPane().add(jLabel10);
-        jLabel10.setBounds(330, 140, 60, 30);
+        jLabel10.setBounds(330, 130, 100, 30);
 
-        jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        getContentPane().add(jTextField2);
-        jTextField2.setBounds(410, 140, 230, 30);
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel11.setText("Model");
+        getContentPane().add(jLabel11);
+        jLabel11.setBounds(330, 210, 60, 30);
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Motor", "Mobil", " " }));
+        jComboBox1.setToolTipText("");
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jComboBox1);
+        jComboBox1.setBounds(450, 170, 230, 30);
+
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel12.setText("Tipe");
+        getContentPane().add(jLabel12);
+        jLabel12.setBounds(330, 170, 60, 30);
+
+        jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        getContentPane().add(jTextField3);
+        jTextField3.setBounds(450, 210, 230, 30);
+
+        jComboBox2.setPreferredSize(new java.awt.Dimension(1280, 720));
+        getContentPane().add(jComboBox2);
+        jComboBox2.setBounds(450, 130, 230, 30);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -303,6 +395,10 @@ public class AddCustomer extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jLabel2MouseClicked
 
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -320,14 +416,30 @@ public class AddCustomer extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AddCustomer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EditVehicle.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AddCustomer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EditVehicle.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AddCustomer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EditVehicle.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AddCustomer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EditVehicle.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -348,7 +460,7 @@ public class AddCustomer extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                AddCustomer view = new AddCustomer();
+                EditVehicle view = new EditVehicle();
                 view.setVisible(true);
             }
         });
@@ -356,10 +468,14 @@ public class AddCustomer extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<Customer> jComboBox2;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JFrame jFrame2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -373,6 +489,6 @@ public class AddCustomer extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables
 }

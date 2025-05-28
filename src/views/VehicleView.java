@@ -4,6 +4,10 @@
  */
 package views;
 
+import java.util.List;
+import views.vehicle.AddVehicle;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import models.Session;
 
 /**
@@ -17,10 +21,89 @@ public class VehicleView extends javax.swing.JFrame {
      */
     public VehicleView() {
         initComponents();
+        // Setup table model
         String username = Session.getUser().getUsername();
         jLabel8.setText("Selamat datang, " + username);
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(30);
+        String[] columnNames = {"ID", "ID Customer", "Tipe", "Model", "Plat Nomor"};
+
+        services.VehicleService vehicleService = new services.VehicleService();
+        List<models.Vehicle> vehicles = vehicleService.getAllVehicles();
+
+        Object[][] data = new Object[vehicles.size()][5];
+        for (int i = 0; i < vehicles.size(); i++) {
+            models.Vehicle part = vehicles.get(i);
+            data[i][0] = part.getId();
+            data[i][1] = part.getCustomerId();
+            data[i][2] = part.getType();
+            data[i][3] = part.getModel();
+            data[i][4] = part.getLicensePlate();
+        }
+
+        DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        jTable1.setModel(model);
+        jTable1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+
+        // Pasang action listener tombol
+        jButton1.addActionListener(e -> openAddVehicle());
+        jButton2.addActionListener(e -> openEditVehicle());
+        jButton3.addActionListener(e -> deleteSelectedRow());
+
+        // DELETE dengan tombol keyboard DELETE
+        jTable1.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyPressed(java.awt.event.KeyEvent e) {
+                if (e.getKeyCode() == java.awt.event.KeyEvent.VK_DELETE) {
+                    deleteSelectedRow();
+                }
+            }
+        });
     }
 
+// Method untuk membuka form AddVehicle
+    private void openAddVehicle() {
+        new views.vehicle.AddVehicle().setVisible(true);
+        this.dispose();
+    }
+
+// Method untuk membuka form EditVehicle dengan ID yang dipilih
+    private void openEditVehicle() {
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow != -1) {
+            int id = Integer.parseInt(jTable1.getModel().getValueAt(selectedRow, 0).toString());
+            new views.vehicle.EditVehicle(id).setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Pilih baris yang ingin diedit.");
+        }
+    }
+
+// Method untuk menghapus baris yang dipilih
+    private void deleteSelectedRow() {
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow != -1) {
+            int confirm = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin menghapus data ini?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                int id = Integer.parseInt(jTable1.getModel().getValueAt(selectedRow, 0).toString());
+                services.VehicleService vehicleService = new services.VehicleService();
+                boolean success = vehicleService.deleteVehicle(id);
+                if (success) {
+                    ((DefaultTableModel) jTable1.getModel()).removeRow(selectedRow);
+                    JOptionPane.showMessageDialog(this, "Data berhasil dihapus.");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Gagal menghapus data.");
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Pilih baris yang ingin dihapus.");
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -42,12 +125,13 @@ public class VehicleView extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
-        jPanel10 = new javax.swing.JPanel();
-        jPanel11 = new javax.swing.JPanel();
-        jPanel12 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -180,22 +264,6 @@ public class VehicleView extends javax.swing.JFrame {
         getContentPane().add(jPanel1);
         jPanel1.setBounds(0, 0, 280, 840);
 
-        jPanel3.setBackground(new java.awt.Color(153, 153, 153));
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 200, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 110, Short.MAX_VALUE)
-        );
-
-        getContentPane().add(jPanel3);
-        jPanel3.setBounds(770, 140, 200, 110);
-
         jPanel7.setBackground(new java.awt.Color(0, 122, 255));
         jPanel7.setAlignmentX(0.0F);
 
@@ -224,53 +292,56 @@ public class VehicleView extends javax.swing.JFrame {
         getContentPane().add(jPanel7);
         jPanel7.setBounds(280, 0, 1270, 108);
 
-        jPanel10.setBackground(new java.awt.Color(153, 153, 153));
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
 
-        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
-        jPanel10.setLayout(jPanel10Layout);
-        jPanel10Layout.setHorizontalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 200, Short.MAX_VALUE)
-        );
-        jPanel10Layout.setVerticalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 110, Short.MAX_VALUE)
-        );
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(jTable1);
 
-        getContentPane().add(jPanel10);
-        jPanel10.setBounds(540, 140, 200, 110);
+        getContentPane().add(jScrollPane1);
+        jScrollPane1.setBounds(320, 130, 820, 430);
 
-        jPanel11.setBackground(new java.awt.Color(153, 153, 153));
+        jButton1.setText("ADD");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton1);
+        jButton1.setBounds(320, 570, 90, 30);
 
-        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
-        jPanel11.setLayout(jPanel11Layout);
-        jPanel11Layout.setHorizontalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 200, Short.MAX_VALUE)
-        );
-        jPanel11Layout.setVerticalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 110, Short.MAX_VALUE)
-        );
+        jButton2.setText("EDIT");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton2);
+        jButton2.setBounds(430, 570, 90, 30);
 
-        getContentPane().add(jPanel11);
-        jPanel11.setBounds(310, 140, 200, 110);
-
-        jPanel12.setBackground(new java.awt.Color(153, 153, 153));
-
-        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
-        jPanel12.setLayout(jPanel12Layout);
-        jPanel12Layout.setHorizontalGroup(
-            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 200, Short.MAX_VALUE)
-        );
-        jPanel12Layout.setVerticalGroup(
-            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 110, Short.MAX_VALUE)
-        );
-
-        getContentPane().add(jPanel12);
-        jPanel12.setBounds(1000, 140, 200, 110);
+        jButton3.setText("DELETE");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton3);
+        jButton3.setBounds(540, 570, 90, 30);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -307,6 +378,18 @@ public class VehicleView extends javax.swing.JFrame {
         cst.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel2MouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -348,6 +431,9 @@ public class VehicleView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JFrame jFrame2;
     private javax.swing.JLabel jLabel1;
@@ -361,10 +447,8 @@ public class VehicleView extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel11;
-    private javax.swing.JPanel jPanel12;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

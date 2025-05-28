@@ -22,6 +22,13 @@ public abstract class Vehicle {
         this.model = model;
         this.licensePlate = licensePlate;
     }
+    
+    public Vehicle(int customerId, String type, String model, String licensePlate) {
+        this.customerId = customerId;
+        this.type = type;
+        this.model = model;
+        this.licensePlate = licensePlate;
+    }
 
     public int getId() {
         return id;

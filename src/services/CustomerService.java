@@ -22,17 +22,17 @@ public class CustomerService implements CustomerInterface {
 
     @Override
     public Customer getCustomerById(int id) {
-        String sql = "SELECT * FROM customers WHERE id = ?";
-        try ( ResultSet rs = db.selectQuery(sql, id)) {
+        String sql = "SELECT id, name FROM customers WHERE id = ?";
+        try (ResultSet rs = db.selectQuery(sql, id)) {
             if (rs.next()) {
                 return new Customer(
                         rs.getInt("id"),
                         rs.getString("name"),
-                        rs.getString("phone")
+                        null // phone tidak diambil, jadi null
                 );
             }
         } catch (SQLException e) {
-            System.out.println("Error getCustomerById: " + e.getMessage());
+            System.out.println("Error getCustomerIdAndNameById: " + e.getMessage());
         }
         return null;
     }
@@ -43,7 +43,7 @@ public class CustomerService implements CustomerInterface {
         String sql = "SELECT * FROM customers";
         try {
             ResultSet rs = db.selectQuery(sql);
-            
+
             while (rs.next()) {
                 list.add(new Customer(
                         rs.getInt("id"),

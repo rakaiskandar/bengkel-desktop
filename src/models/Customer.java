@@ -9,6 +9,7 @@ package models;
  * @author HP
  */
 public class Customer {
+
     private int id;
     private String name;
     private String phone;
@@ -47,5 +48,10 @@ public class Customer {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-    
+
+    @Override
+    public String toString() {
+        return this.name; // atau format lain, misalnya: return name + " (ID: " + id + ")";
+    }
+
 }

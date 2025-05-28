@@ -10,6 +10,10 @@ package models;
  */
 public class Car extends Vehicle {
 
+    public Car(int customerId, String model, String licensePlate) {
+        super(customerId, "Car", model, licensePlate);
+    }
+
     public Car(int id, int customerId, String model, String licensePlate) {
         super(id, customerId, "Car", model, licensePlate);
     }
@@ -18,5 +22,5 @@ public class Car extends Vehicle {
     public void printVehicleInfo() {
         System.out.println("Mobil - Model: " + model + ", Plat: " + licensePlate);
     }
-    
+
 }
