@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 25, 2025 at 05:05 PM
+-- Generation Time: May 28, 2025 at 06:38 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,25 @@ SET time_zone = "+00:00";
 --
 -- Database: `sistem_bengkel`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customers`
+--
+
+CREATE TABLE `customers` (
+  `id` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `phone` varchar(13) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `customers`
+--
+
+INSERT INTO `customers` (`id`, `name`, `phone`) VALUES
+(1, 'RAMKA', '089948885000');
 
 -- --------------------------------------------------------
 
@@ -57,7 +76,7 @@ INSERT INTO `spare_parts` (`id`, `name`, `price`) VALUES
 (17, 'Timing Belt (Mobil)', 750000),
 (18, 'V-Belt (Motor)', 200000),
 (19, 'Radiator (Mobil)', 1500000),
-(20, 'CDI Unit (Motor)', 350000);
+(20, 'CDI Unit (Mobil)', 350000);
 
 -- --------------------------------------------------------
 
@@ -83,6 +102,12 @@ INSERT INTO `users` (`id`, `username`, `password`) VALUES
 --
 
 --
+-- Indexes for table `customers`
+--
+ALTER TABLE `customers`
+  ADD PRIMARY KEY (`id`) USING BTREE;
+
+--
 -- Indexes for table `spare_parts`
 --
 ALTER TABLE `spare_parts`
@@ -99,10 +124,16 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `customers`
+--
+ALTER TABLE `customers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `spare_parts`
 --
 ALTER TABLE `spare_parts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `users`
