@@ -307,15 +307,15 @@ public class CustomerView extends javax.swing.JFrame {
 
         jButton1.setText("ADD");
         getContentPane().add(jButton1);
-        jButton1.setBounds(330, 610, 76, 27);
+        jButton1.setBounds(330, 610, 72, 23);
 
         jButton2.setText("EDIT");
         getContentPane().add(jButton2);
-        jButton2.setBounds(440, 610, 76, 27);
+        jButton2.setBounds(440, 610, 72, 23);
 
         jButton3.setText("DELETE");
         getContentPane().add(jButton3);
-        jButton3.setBounds(550, 610, 100, 27);
+        jButton3.setBounds(550, 610, 100, 23);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

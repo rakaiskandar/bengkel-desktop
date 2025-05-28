@@ -42,6 +42,7 @@ public class Login extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Login");
         setBackground(new java.awt.Color(255, 255, 255));
 
         lUsername.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -49,12 +50,6 @@ public class Login extends javax.swing.JFrame {
 
         lPassword.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lPassword.setText("Password");
-
-        jUser.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jUserActionPerformed(evt);
-            }
-        });
 
         bLogin.setBackground(new java.awt.Color(0, 101, 211));
         bLogin.setForeground(new java.awt.Color(255, 255, 255));
@@ -177,12 +172,9 @@ public class Login extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_bLoginActionPerformed
 
-    private void jUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jUserActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jUserActionPerformed
-
     private void bExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bExitActionPerformed
         // TODO add your handling code here:
+        System.exit(0);
     }//GEN-LAST:event_bExitActionPerformed
 
     /**

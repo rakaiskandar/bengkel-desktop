@@ -6,7 +6,6 @@ package views.sparepart;
 
 import views.SparepartView;
 import views.*;
-import java.util.List;
 import services.SparePartService;
 import models.SparePart;
 import javax.swing.JOptionPane;
@@ -136,7 +135,7 @@ public class EditSparepart extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Dashboard - Home");
+        setTitle("Dashboard - Sparepart");
         setPreferredSize(new java.awt.Dimension(1280, 720));
         getContentPane().setLayout(null);
 

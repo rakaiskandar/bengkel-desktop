@@ -23,7 +23,7 @@ public class Invoice {
         this.date = date;
     }
 
-// Constructor lengkap (misalnya saat load dari database)
+    // Constructor lengkap (misalnya saat load dari database)
     public Invoice(int id, int serviceId, double total, Date date) {
         this.id = id;
         this.serviceId = serviceId;
@@ -31,7 +31,7 @@ public class Invoice {
         this.date = date;
     }
 
-// Getter & Setter
+    // Getter & Setter
     public int getId() {
         return id;
     }

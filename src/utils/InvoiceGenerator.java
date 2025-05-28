@@ -2,34 +2,39 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package services;
+package utils;
 
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.*;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
-import utils.Database;
+import java.util.List;
 import models.Invoice;
+import models.Motorcycle;
 import models.ServiceDetail;
 import models.ServiceRecord;
 import models.SparePart;
 import models.Vehicle;
-import java.util.List;
-import models.Motorcycle;
 
 /**
  *
  * @author HP
  */
-public class InvoiceService {
-
+public class InvoiceGenerator {
     private final Database db;
 
-    public InvoiceService() {
+    public InvoiceGenerator() {
         db = new Database();
     }
 
-    public boolean save(Invoice invoice) {
+    public boolean save(models.Invoice invoice) {
         String sql = "INSERT INTO invoices (service_id, total, date) VALUES (?, ?, ?)";
         try {
             int rows = db.executeUpdate(sql,
@@ -100,4 +105,3 @@ public class InvoiceService {
         }
     }
 }
-

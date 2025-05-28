@@ -5,7 +5,6 @@
 package views;
 
 import java.util.List;
-import views.vehicle.AddVehicle;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import models.Session;
@@ -317,29 +316,14 @@ public class VehicleView extends javax.swing.JFrame {
         jScrollPane1.setBounds(320, 130, 820, 430);
 
         jButton1.setText("ADD");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
         getContentPane().add(jButton1);
         jButton1.setBounds(320, 570, 90, 30);
 
         jButton2.setText("EDIT");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
         getContentPane().add(jButton2);
         jButton2.setBounds(430, 570, 90, 30);
 
         jButton3.setText("DELETE");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
         getContentPane().add(jButton3);
         jButton3.setBounds(540, 570, 90, 30);
 
@@ -378,18 +362,6 @@ public class VehicleView extends javax.swing.JFrame {
         cst.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel2MouseClicked
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
