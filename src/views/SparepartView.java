@@ -168,7 +168,7 @@ public class SparepartView extends javax.swing.JFrame {
         jPanel1.setAlignmentX(0.0F);
 
         jLabel3.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("      Logout");
         jLabel3.setToolTipText("");
@@ -317,17 +317,17 @@ public class SparepartView extends javax.swing.JFrame {
         jButton1.setText("ADD");
         jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         getContentPane().add(jButton1);
-        jButton1.setBounds(530, 140, 76, 27);
+        jButton1.setBounds(530, 140, 72, 23);
 
         jButton2.setText("EDIT");
         jButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         getContentPane().add(jButton2);
-        jButton2.setBounds(620, 140, 76, 27);
+        jButton2.setBounds(620, 140, 72, 23);
 
         jButton3.setText("DELETE");
         jButton3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         getContentPane().add(jButton3);
-        jButton3.setBounds(710, 140, 100, 27);
+        jButton3.setBounds(710, 140, 100, 23);
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel9.setText("Daftar Sparepart");

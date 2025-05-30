@@ -7,6 +7,7 @@ package views;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import models.Customer;
 import models.Session;
 
 /**
@@ -24,16 +25,19 @@ public class VehicleView extends javax.swing.JFrame {
         String username = Session.getUser().getUsername();
         jLabel8.setText("Selamat datang, " + username);
         jTable1.getColumnModel().getColumn(0).setPreferredWidth(30);
-        String[] columnNames = {"ID", "ID Customer", "Tipe", "Model", "Plat Nomor"};
+        String[] columnNames = {"ID", "Nama Customer", "Tipe", "Model", "Plat Nomor"};
 
         services.VehicleService vehicleService = new services.VehicleService();
+        services.CustomerService customerService = new services.CustomerService();
+        
         List<models.Vehicle> vehicles = vehicleService.getAllVehicles();
+        List<Customer> customerList = customerService.getAllCustomers();
 
         Object[][] data = new Object[vehicles.size()][5];
         for (int i = 0; i < vehicles.size(); i++) {
             models.Vehicle part = vehicles.get(i);
             data[i][0] = part.getId();
-            data[i][1] = part.getCustomerId();
+            data[i][1] = findCustomerNameById(customerList, part.getCustomerId());
             data[i][2] = part.getType();
             data[i][3] = part.getModel();
             data[i][4] = part.getLicensePlate();
@@ -63,6 +67,15 @@ public class VehicleView extends javax.swing.JFrame {
                 }
             }
         });
+    }
+    
+    private String findCustomerNameById(List<Customer> customer, int id) {
+        for (Customer c : customer) {
+            if (c.getId() == id) {
+                return c.getName();
+            }
+        }
+        return "-";
     }
 
 // Method untuk membuka form AddVehicle
@@ -168,7 +181,7 @@ public class VehicleView extends javax.swing.JFrame {
         jPanel1.setAlignmentX(0.0F);
 
         jLabel3.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("      Logout");
         jLabel3.setToolTipText("");

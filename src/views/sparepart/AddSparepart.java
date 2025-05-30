@@ -120,7 +120,7 @@ public class AddSparepart extends javax.swing.JFrame {
         jPanel1.setAlignmentX(0.0F);
 
         jLabel3.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("      Logout");
         jLabel3.setToolTipText("");
@@ -144,7 +144,7 @@ public class AddSparepart extends javax.swing.JFrame {
         });
 
         jLabel5.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("      Sparepart");
         jLabel5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -257,7 +257,7 @@ public class AddSparepart extends javax.swing.JFrame {
         jButton1.setText("ADD");
         jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         getContentPane().add(jButton1);
-        jButton1.setBounds(330, 290, 76, 27);
+        jButton1.setBounds(330, 290, 72, 23);
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel9.setText("Price");
@@ -278,7 +278,7 @@ public class AddSparepart extends javax.swing.JFrame {
         jTextField2.setBounds(410, 200, 230, 30);
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel11.setText("Add new sparepart");
+        jLabel11.setText("Add New Sparepart");
         getContentPane().add(jLabel11);
         jLabel11.setBounds(330, 110, 210, 80);
 
