@@ -13,6 +13,9 @@ public class ServiceDetail extends ServiceRecord {
     private int serviceId;
     private int sparePartId;
     private int quantity;
+
+    public ServiceDetail() {
+    }
     
     public ServiceDetail(int serviceId, int sparePartId, int quantity) {
         this.serviceId   = serviceId;

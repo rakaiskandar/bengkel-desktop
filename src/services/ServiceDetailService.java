@@ -22,7 +22,7 @@ public class ServiceDetailService implements ServiceDetailInterface {
 
     @Override
     public ServiceDetail getById(int id) {
-        String sql = "SELECT * FROM service_spare_parts WHERE id = ?";
+        String sql = "SELECT * FROM service_details WHERE id = ?";
         try ( ResultSet rs = db.selectQuery(sql, id)) {
             if (rs.next()) {
                 return new ServiceDetail(
@@ -41,7 +41,7 @@ public class ServiceDetailService implements ServiceDetailInterface {
     @Override
     public List<ServiceDetail> getByServiceId(int serviceId) {
         List<ServiceDetail> list = new ArrayList<ServiceDetail>();
-        String sql = "SELECT * FROM service_spare_parts WHERE service_id = ?";
+        String sql = "SELECT * FROM service_details WHERE service_id = ?";
         try ( ResultSet rs = db.selectQuery(sql, serviceId)) {
             while (rs.next()) {
                 list.add(new ServiceDetail(
@@ -60,7 +60,7 @@ public class ServiceDetailService implements ServiceDetailInterface {
     @Override
     public List<ServiceDetail> getAll() {
         List<ServiceDetail> list = new ArrayList<ServiceDetail>();
-        String sql = "SELECT * FROM service_spare_parts";
+        String sql = "SELECT * FROM service_details";
         try ( ResultSet rs = db.selectQuery(sql)) {
             while (rs.next()) {
                 list.add(new ServiceDetail(
@@ -78,19 +78,19 @@ public class ServiceDetailService implements ServiceDetailInterface {
 
     @Override
     public boolean addServiceDetail(ServiceDetail detail) {
-        String sql = "INSERT INTO service_spare_parts (service_id, spare_part_id, quantity) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO service_details (service_id, spare_part_id, quantity) VALUES (?, ?, ?)";
         return db.executeUpdate(sql, detail.getServiceId(), detail.getSparePartId(), detail.getQuantity()) > 0;
     }
 
     @Override
     public boolean updateServiceDetail(ServiceDetail detail) {
-        String sql = "UPDATE service_spare_parts SET spare_part_id = ?, quantity = ? WHERE id = ?";
+        String sql = "UPDATE service_details SET spare_part_id = ?, quantity = ? WHERE id = ?";
         return db.executeUpdate(sql, detail.getSparePartId(), detail.getQuantity(), detail.getId()) > 0;
     }
 
     @Override
     public boolean deleteServiceDetail(int id) {
-        String sql = "DELETE FROM service_spare_parts WHERE id = ?";
+        String sql = "DELETE FROM service_details WHERE id = ?";
         return db.executeUpdate(sql, id) > 0;
     }
     

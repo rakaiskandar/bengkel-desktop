@@ -9,6 +9,7 @@ package models;
  * @author HP
  */
 public class SparePart {
+
     private int id;
     private String name;
     private double price;
@@ -46,6 +47,11 @@ public class SparePart {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return this.name; // atau getName() tergantung field kamu
     }
 
 }

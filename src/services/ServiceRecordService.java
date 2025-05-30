@@ -13,11 +13,13 @@ import java.util.List;
 import models.ServiceDetail;
 import models.ServiceRecord;
 import models.SparePart;
+
 /**
  *
  * @author HP
  */
 public class ServiceRecordService implements ServiceRecordInterface {
+
     private final Database db = new Database();
 
     @Override
@@ -26,11 +28,11 @@ public class ServiceRecordService implements ServiceRecordInterface {
         try (ResultSet rs = db.selectQuery(sql, id)) {
             if (rs.next()) {
                 return new ServiceRecord(
-                    rs.getInt("id"),
-                    rs.getInt("vehicle_id"),
-                    rs.getString("type"),
-                    rs.getString("description"),
-                    rs.getDouble("cost")
+                        rs.getInt("id"),
+                        rs.getInt("vehicle_id"),
+                        rs.getString("type"),
+                        rs.getString("description"),
+                        rs.getDouble("cost")
                 );
             }
         } catch (SQLException e) {
@@ -46,11 +48,11 @@ public class ServiceRecordService implements ServiceRecordInterface {
         try (ResultSet rs = db.selectQuery(sql, vehicleId)) {
             while (rs.next()) {
                 list.add(new ServiceRecord(
-                    rs.getInt("id"),
-                    rs.getInt("vehicle_id"),
-                    rs.getString("type"),
-                    rs.getString("description"),
-                    rs.getDouble("cost")
+                        rs.getInt("id"),
+                        rs.getInt("vehicle_id"),
+                        rs.getString("type"),
+                        rs.getString("description"),
+                        rs.getDouble("cost")
                 ));
             }
         } catch (SQLException e) {
@@ -66,11 +68,11 @@ public class ServiceRecordService implements ServiceRecordInterface {
         try (ResultSet rs = db.selectQuery(sql)) {
             while (rs.next()) {
                 list.add(new ServiceRecord(
-                    rs.getInt("id"),
-                    rs.getInt("vehicle_id"),
-                    rs.getString("type"),
-                    rs.getString("description"),
-                    rs.getDouble("cost")
+                        rs.getInt("id"),
+                        rs.getInt("vehicle_id"),
+                        rs.getString("type"),
+                        rs.getString("description"),
+                        rs.getDouble("cost")
                 ));
             }
         } catch (SQLException e) {
@@ -97,15 +99,28 @@ public class ServiceRecordService implements ServiceRecordInterface {
         return db.executeUpdate(sql, id) > 0;
     }
 
-    public double calculateSpareCost() {
-        ServiceRecord sds = new ServiceRecord();
+    public double calculateSpareCost(List<ServiceDetail> details) {
         SparePartService sps = new SparePartService();
         double total = 0;
-        for (ServiceDetail d : sds.getDetails()) {
+        for (ServiceDetail d : details) {
             SparePart part = sps.getSparePartById(d.getSparePartId());
-            total += part.getPrice() * d.getQuantity();
+            if (part != null) {
+                total += part.getPrice() * d.getQuantity();
+            }
         }
         return total;
     }
-    
+
+    public int getLastInsertedId() {
+        int id = -1;
+        try (ResultSet rs = db.selectQuery("SELECT LAST_INSERT_ID()")) {
+            if (rs.next()) {
+                id = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getLastInsertedId: " + e.getMessage());
+        }
+        return id;
+    }
+
 }

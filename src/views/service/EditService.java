@@ -6,12 +6,17 @@ package views.service;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
+import models.ServiceDetail;
 import services.VehicleService;
 import services.ServiceRecordService;
 import models.Session;
 import models.Vehicle;
 import models.ServiceRecord;
+import models.SparePart;
+import services.ServiceDetailService;
+import services.SparePartService;
 import views.CustomerView;
 import views.DashboardView;
 import views.Login;
@@ -28,9 +33,8 @@ public class EditService extends javax.swing.JFrame {
     /**
      * Creates new form Dashboard
      */
-    
     private int serviceRecordId;
-    
+
     private javax.swing.JPanel panelUsedSparepart;
     private javax.swing.JButton btnAddSparepart;
     private JScrollPane scrollPaneSparepart;
@@ -42,6 +46,10 @@ public class EditService extends javax.swing.JFrame {
         loadVehicle();
         jButton1.addActionListener(e -> saveData());
 
+        initSparepartPanel();
+    }
+
+    private void initSparepartPanel() {
         panelUsedSparepart = new javax.swing.JPanel();
         panelUsedSparepart.setLayout(new BoxLayout(panelUsedSparepart, BoxLayout.Y_AXIS));
 
@@ -54,12 +62,7 @@ public class EditService extends javax.swing.JFrame {
         btnAddSparepart.setBounds(770, 200, 200, 27);
         getContentPane().add(btnAddSparepart);
 
-        btnAddSparepart.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addSparepartRow();
-            }
-        });
-
+        btnAddSparepart.addActionListener(e -> addSparepartRow(new ServiceDetail()));
     }
 
     public EditService(int id) {
@@ -67,7 +70,7 @@ public class EditService extends javax.swing.JFrame {
         this.serviceRecordId = id;
         loadData(id);
     }
-    
+
     private void loadData(int id) {
         ServiceRecordService service = new ServiceRecordService();
         ServiceRecord sr = service.getById(id);
@@ -76,48 +79,92 @@ public class EditService extends javax.swing.JFrame {
             jTextField1.setText(sr.getType());
             jTextArea1.setText(sr.getDescription());
             jTextField3.setText(String.valueOf(sr.getCost()));
+
+            // Tampilkan spareparts yang digunakan sebelumnya
+            List<ServiceDetail> details = sr.getDetails(); // Pastikan ServiceRecord punya method ini
+            if (details != null) {
+                for (ServiceDetail detail : details) {
+                    addSparepartRow(detail);
+                }
+            }
+
         } else {
             JOptionPane.showMessageDialog(this, "Data sparepart tidak ditemukan.", "Error", JOptionPane.ERROR_MESSAGE);
             dispose();
         }
-    }   
-    
+    }
+
     private void saveData() {
         Vehicle selectedVehicle = (Vehicle) jComboBox1.getSelectedItem();
         String servType = jTextField1.getText();
         String desc = jTextArea1.getText();
-        String totalCost = jTextField3.getText();
 
-
-        if (selectedVehicle == null || servType.isEmpty() || desc.isEmpty() || totalCost == null) {
+        if (selectedVehicle == null || servType.isEmpty() || desc.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Semua field wajib diisi!", "Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        try {
-            double cost = Double.parseDouble(totalCost);
-            ServiceRecord sr = new ServiceRecord(selectedVehicle.getId(), servType, desc, cost);
-            sr.setId(serviceRecordId);
-            sr.setVehicleId(selectedVehicle.getId());
-            sr.setType(servType);
-            sr.setDescription(desc);
-            sr.setCost(cost);
+        // Ambil detail dari panelUsedSparepart
+        List<ServiceDetail> serviceDetails = new ArrayList<>();
+        for (Component comp : panelUsedSparepart.getComponents()) {
+            if (comp instanceof JPanel rowPanel) {
+                JComboBox<SparePart> combo = null;
+                JTextField qtyField = null;
 
-            ServiceRecordService service = new ServiceRecordService();
-            boolean success = service.updateService(sr);
+                for (Component rowComp : rowPanel.getComponents()) {
+                    if (rowComp instanceof JComboBox<?> c && c.getSelectedItem() instanceof SparePart) {
+                        combo = (JComboBox<SparePart>) c;
+                    } else if (rowComp instanceof JTextField t) {
+                        qtyField = t;
+                    }
+                }
 
-            if (success) {
-                JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan.");
-                dispose();
-                new ServiceView().setVisible(true);
-            } else {
-                JOptionPane.showMessageDialog(this, "Gagal menambahkan data.", "Error", JOptionPane.ERROR_MESSAGE);
+                if (combo != null && qtyField != null) {
+                    try {
+                        SparePart selectedPart = (SparePart) combo.getSelectedItem();
+                        int qty = Integer.parseInt(qtyField.getText());
+
+                        ServiceDetail detail = new ServiceDetail(0, selectedPart.getId(), qty);
+                        detail.setSparePartId(selectedPart.getId());
+                        detail.setQuantity(qty);
+
+                        serviceDetails.add(detail);
+                    } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(this, "Qty harus angka!", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
             }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Total cost harus berupa angka.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        if (serviceDetails.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Minimal 1 sparepart harus dipilih!", "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Hitung total biaya sparepart
+        ServiceRecordService service = new ServiceRecordService();
+        double totalSpareCost = service.calculateSpareCost(serviceDetails);
+
+        // Buat dan simpan ServiceRecord
+        ServiceRecord sr = new ServiceRecord(selectedVehicle.getId(), servType, desc, totalSpareCost);
+        sr.setId(serviceRecordId);
+        sr.setVehicleId(selectedVehicle.getId());
+        sr.setType(servType);
+        sr.setDescription(desc);
+        sr.setCost(totalSpareCost);
+
+        boolean success = service.updateService(sr);
+
+        if (success) {
+            JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan.");
+            dispose();
+            new ServiceView().setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Gagal menambahkan data.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     private void loadVehicle() {
         VehicleService vehicleService = new VehicleService();
         List<Vehicle> vehicleList = vehicleService.getAllVehicles();
@@ -129,15 +176,43 @@ public class EditService extends javax.swing.JFrame {
         jComboBox1.setModel(model);
     }
 
-    private void addSparepartRow() {
+    private void addSparepartRow(ServiceDetail detail) {
         JPanel rowPanel = new JPanel();
         rowPanel.setLayout(new java.awt.FlowLayout(FlowLayout.LEFT));
         rowPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         JLabel labelNama = new JLabel("Sparepart:");
-        JComboBox<String> comboSparepart = new JComboBox<>(new String[]{"Oli", "Ban", "Kampas Rem"});
+        JComboBox<SparePart> comboSparepart = new JComboBox<>();
+
+        // Ambil data sparepart dari database
+        SparePartService sparePartService = new SparePartService();
+        List<SparePart> spareParts = sparePartService.getAllSpareParts();
+        SparePart selectedPart = null;
+        for (SparePart sp : spareParts) {
+            comboSparepart.addItem(sp);
+            if (sp.getId() == detail.getSparePartId()) {
+                selectedPart = sp;
+            }
+        }
+
+        if (selectedPart != null) {
+            comboSparepart.setSelectedItem(selectedPart);
+        }
+
         JLabel labelQty = new JLabel("Qty:");
         JTextField qtyField = new JTextField(5);
+        qtyField.setText(String.valueOf(detail.getQuantity()));
+
+        JButton deleteButton = new JButton("X");
+        deleteButton.setForeground(Color.RED);
+        deleteButton.setFocusable(false);
+        deleteButton.setMargin(new Insets(2, 5, 2, 5));
+        deleteButton.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        deleteButton.addActionListener(e -> {
+            panelUsedSparepart.remove(rowPanel);
+            panelUsedSparepart.revalidate();
+            panelUsedSparepart.repaint();
+        });
 
         labelNama.setFont(new java.awt.Font("Segoe UI", 0, 14));
         labelQty.setFont(new java.awt.Font("Segoe UI", 0, 14));
@@ -146,11 +221,11 @@ public class EditService extends javax.swing.JFrame {
         rowPanel.add(comboSparepart);
         rowPanel.add(labelQty);
         rowPanel.add(qtyField);
+        rowPanel.add(deleteButton);
 
         panelUsedSparepart.add(rowPanel);
         panelUsedSparepart.revalidate();
         panelUsedSparepart.repaint();
-        
     }
 
     /**
@@ -380,14 +455,14 @@ public class EditService extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jComboBox1);
-        jComboBox1.setBounds(480, 200, 240, 26);
+        jComboBox1.setBounds(480, 200, 240, 22);
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel11.setText("Vehicle");
         getContentPane().add(jLabel11);
         jLabel11.setBounds(320, 200, 60, 20);
         getContentPane().add(jTextField1);
-        jTextField1.setBounds(480, 250, 240, 26);
+        jTextField1.setBounds(480, 250, 240, 22);
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel12.setText("Service Type");
@@ -399,7 +474,7 @@ public class EditService extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTextArea1);
 
         getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(480, 300, 238, 130);
+        jScrollPane1.setBounds(480, 300, 234, 130);
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel13.setText("Description");
@@ -418,7 +493,7 @@ public class EditService extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jTextField3);
-        jTextField3.setBounds(480, 460, 240, 26);
+        jTextField3.setBounds(480, 460, 240, 22);
 
         jButton1.setText("Submit");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -427,14 +502,14 @@ public class EditService extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton1);
-        jButton1.setBounds(320, 540, 76, 27);
+        jButton1.setBounds(320, 540, 72, 23);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
         // TODO add your handling code here:                                     
-        Session.clear();       
+        Session.clear();
         Login lgn = new Login();
         lgn.setLocationRelativeTo(null);
         lgn.setVisible(true);
