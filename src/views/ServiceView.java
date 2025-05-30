@@ -5,12 +5,20 @@
 package views;
 
 import java.util.List;
-import java.awt.Color;
+import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
-import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
+import models.ServiceDetail;
+import models.ServiceRecord;
 import models.Session;
+import models.SparePart;
 import models.Vehicle;
+import services.ServiceDetailService;
+import services.ServiceRecordService;
+import services.SparePartService;
+import services.VehicleService;
+import utils.Formatter;
+import utils.InvoiceGenerator;
 import views.service.AddService;
 import views.service.EditService;
 
@@ -43,7 +51,7 @@ public class ServiceView extends javax.swing.JFrame {
             data[i][1] = findLicensePlateById(vehicleList, servicelist.getVehicleId());
             data[i][2] = servicelist.getType();
             data[i][3] = servicelist.getDescription();
-            data[i][4] = servicelist.getCost();
+            data[i][4] = Formatter.toRupiah(servicelist.getCost());
         }
 
         DefaultTableModel model = new DefaultTableModel(data, columnNames) {
@@ -64,7 +72,7 @@ public class ServiceView extends javax.swing.JFrame {
                 }
             }
         });
-        
+
         jButton4.addActionListener(e -> openEditSparepart());
 
     }
@@ -77,7 +85,7 @@ public class ServiceView extends javax.swing.JFrame {
         }
         return "-";
     }
-    
+
     private void openEditSparepart() {
         int selectedRow = jTable1.getSelectedRow();
         if (selectedRow != -1) {
@@ -105,7 +113,7 @@ public class ServiceView extends javax.swing.JFrame {
                 } else {
                     JOptionPane.showMessageDialog(this, "Gagal menghapus data.");
                 }
-            } else { 
+            } else {
                 return;
             }
         } else {
@@ -138,6 +146,7 @@ public class ServiceView extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Service");
@@ -197,11 +206,6 @@ public class ServiceView extends javax.swing.JFrame {
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("      Service");
         jLabel7.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel7MouseClicked(evt);
-            }
-        });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 3, 30)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -257,11 +261,6 @@ public class ServiceView extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Selamat Datang, ");
-        jLabel8.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel8MouseClicked(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -296,7 +295,7 @@ public class ServiceView extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jButton1.setText("Tambah servis baru");
+        jButton1.setText("ADD");
         jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -304,24 +303,21 @@ public class ServiceView extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("Hapus servis");
+        jButton3.setText("DELETE");
         jButton3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton3MouseClicked(evt);
-            }
-        });
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
 
-        jButton4.setText("Ubah servis");
+        jButton4.setText("EDIT");
         jButton4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+
+        jButton2.setText("CETAK");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                jButton2ActionPerformed(evt);
             }
         });
 
@@ -335,7 +331,7 @@ public class ServiceView extends javax.swing.JFrame {
                     .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(40, 40, 40)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -343,7 +339,9 @@ public class ServiceView extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(jButton4)
                                 .addGap(12, 12, 12)
-                                .addComponent(jButton3))
+                                .addComponent(jButton3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton2))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 750, javax.swing.GroupLayout.PREFERRED_SIZE)))))
         );
         layout.setVerticalGroup(
@@ -356,7 +354,8 @@ public class ServiceView extends javax.swing.JFrame {
                     .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1)
                     .addComponent(jButton3)
-                    .addComponent(jButton4))
+                    .addComponent(jButton4)
+                    .addComponent(jButton2))
                 .addGap(10, 10, 10)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -366,7 +365,7 @@ public class ServiceView extends javax.swing.JFrame {
 
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
         // TODO add your handling code here:                                     
-        Session.clear();       
+        Session.clear();
         Login lgn = new Login();
         lgn.setLocationRelativeTo(null);
         lgn.setVisible(true);
@@ -389,14 +388,6 @@ public class ServiceView extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jLabel6MouseClicked
 
-    private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jLabel7MouseClicked
-
-    private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jLabel8MouseClicked
-
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
         // TODO add your handling code here:                                     
         DashboardView dsh = new DashboardView();
@@ -411,11 +402,6 @@ public class ServiceView extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-        deleteSelectedRow();
-    }//GEN-LAST:event_jButton3ActionPerformed
-
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
         // TODO add your handling code here:
         CustomerView cst = new CustomerView();
@@ -424,13 +410,58 @@ public class ServiceView extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jLabel2MouseClicked
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+        int row = jTable1.getSelectedRow();
+        if (row < 0) {
+            JOptionPane.showMessageDialog(this, "Pilih baris untuk cetak invoice.");
+            return;
+        }
 
-    private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
+        // 1) Ambil serviceId
+        int serviceId = Integer.parseInt(
+                jTable1.getValueAt(row, 0).toString()
+        );
+
+        // 2) Load data
+        ServiceRecordService srs = new ServiceRecordService();
+        ServiceRecord sr = srs.getById(serviceId);
+
+        VehicleService vs = new VehicleService();
+        Vehicle vehicle = vs.getVehicleById(sr.getVehicleId());
+
+        ServiceDetailService sds = new ServiceDetailService();
+        List<ServiceDetail> details = sds.getByServiceId(serviceId);
+
+        SparePartService sps = new SparePartService();
+        List<SparePart> parts = details.stream()
+                .map(d -> sps.getSparePartById(d.getSparePartId()))
+                .collect(Collectors.toList());
+
+        // 3) Generate random invoiceId (misal timestamp + random)
+        String invoiceId
+                = "INV-" + System.currentTimeMillis()
+                + "-" + (int) (Math.random() * 1000);
+
+        // 4) Tentukan output path
+        String userHome   = System.getProperty("user.home");
+        String downloads  = userHome + "/Downloads";
+        String outputPath = downloads + "/invoice_" + invoiceId + ".pdf";
+
+        // 5) Cetak PDF
+        InvoiceGenerator.generateInvoicePDF(
+                invoiceId, sr, vehicle, details, parts, outputPath
+        );
+
+        JOptionPane.showMessageDialog(this,
+                "Invoice dicetak:\n" + outputPath
+        );
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3MouseClicked
+        deleteSelectedRow();
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -473,6 +504,7 @@ public class ServiceView extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;

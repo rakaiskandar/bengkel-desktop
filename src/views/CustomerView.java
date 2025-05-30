@@ -7,7 +7,9 @@ package views;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import models.Customer;
 import models.Session;
+import services.CustomerService;
 
 /**
  *
@@ -25,8 +27,8 @@ public class CustomerView extends javax.swing.JFrame {
         jTable1.getColumnModel().getColumn(0).setPreferredWidth(30);
         String[] columnNames = {"ID", "Name", "Phone"};
         
-        services.CustomerService CustomerService = new services.CustomerService();
-        List<models.Customer> Customer = CustomerService.getAllCustomers();
+        CustomerService CustomerService = new CustomerService();
+        List<Customer> Customer = CustomerService.getAllCustomers();
         
         Object[][] data = new Object[Customer.size()][3];
         for (int i = 0; i < Customer.size(); i++) {
@@ -87,7 +89,7 @@ public class CustomerView extends javax.swing.JFrame {
             int confirm = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin menghapus data ini?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
                 int id = Integer.parseInt(jTable1.getModel().getValueAt(selectedRow, 0).toString());
-                services.CustomerService customerService = new services.CustomerService();
+                CustomerService customerService = new CustomerService();
                 boolean success = customerService.deleteCustomer(id);
                 if (success) {
                     ((DefaultTableModel) jTable1.getModel()).removeRow(selectedRow);
@@ -166,7 +168,7 @@ public class CustomerView extends javax.swing.JFrame {
         jPanel1.setAlignmentX(0.0F);
 
         jLabel3.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("      Logout");
         jLabel3.setToolTipText("");
@@ -315,17 +317,17 @@ public class CustomerView extends javax.swing.JFrame {
         jButton1.setText("ADD");
         jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         getContentPane().add(jButton1);
-        jButton1.setBounds(530, 140, 76, 27);
+        jButton1.setBounds(530, 140, 72, 23);
 
         jButton2.setText("EDIT");
         jButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         getContentPane().add(jButton2);
-        jButton2.setBounds(620, 140, 76, 27);
+        jButton2.setBounds(620, 140, 72, 23);
 
         jButton3.setText("DELETE");
         jButton3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         getContentPane().add(jButton3);
-        jButton3.setBounds(710, 140, 100, 27);
+        jButton3.setBounds(710, 140, 100, 23);
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel9.setText("Daftar Costumer");

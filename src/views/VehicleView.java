@@ -9,6 +9,9 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import models.Customer;
 import models.Session;
+import models.Vehicle;
+import services.CustomerService;
+import services.VehicleService;
 
 /**
  *
@@ -27,15 +30,15 @@ public class VehicleView extends javax.swing.JFrame {
         jTable1.getColumnModel().getColumn(0).setPreferredWidth(30);
         String[] columnNames = {"ID", "Nama Customer", "Tipe", "Model", "Plat Nomor"};
 
-        services.VehicleService vehicleService = new services.VehicleService();
-        services.CustomerService customerService = new services.CustomerService();
+        VehicleService vehicleService = new services.VehicleService();
+        CustomerService customerService = new services.CustomerService();
         
-        List<models.Vehicle> vehicles = vehicleService.getAllVehicles();
+        List<Vehicle> vehicles = vehicleService.getAllVehicles();
         List<Customer> customerList = customerService.getAllCustomers();
 
         Object[][] data = new Object[vehicles.size()][5];
         for (int i = 0; i < vehicles.size(); i++) {
-            models.Vehicle part = vehicles.get(i);
+            Vehicle part = vehicles.get(i);
             data[i][0] = part.getId();
             data[i][1] = findCustomerNameById(customerList, part.getCustomerId());
             data[i][2] = part.getType();
@@ -103,7 +106,7 @@ public class VehicleView extends javax.swing.JFrame {
             int confirm = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin menghapus data ini?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
                 int id = Integer.parseInt(jTable1.getModel().getValueAt(selectedRow, 0).toString());
-                services.VehicleService vehicleService = new services.VehicleService();
+                VehicleService vehicleService = new VehicleService();
                 boolean success = vehicleService.deleteVehicle(id);
                 if (success) {
                     ((DefaultTableModel) jTable1.getModel()).removeRow(selectedRow);

@@ -40,7 +40,7 @@ public class ServiceDetailService implements ServiceDetailInterface {
 
     @Override
     public List<ServiceDetail> getByServiceId(int serviceId) {
-        List<ServiceDetail> list = new ArrayList<ServiceDetail>();
+        List<ServiceDetail> list = new ArrayList<>();
         String sql = "SELECT * FROM service_details WHERE service_id = ?";
         try ( ResultSet rs = db.selectQuery(sql, serviceId)) {
             while (rs.next()) {
@@ -59,7 +59,7 @@ public class ServiceDetailService implements ServiceDetailInterface {
 
     @Override
     public List<ServiceDetail> getAll() {
-        List<ServiceDetail> list = new ArrayList<ServiceDetail>();
+        List<ServiceDetail> list = new ArrayList<>();
         String sql = "SELECT * FROM service_details";
         try ( ResultSet rs = db.selectQuery(sql)) {
             while (rs.next()) {

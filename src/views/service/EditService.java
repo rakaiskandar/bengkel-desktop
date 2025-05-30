@@ -15,7 +15,6 @@ import models.Session;
 import models.Vehicle;
 import models.ServiceRecord;
 import models.SparePart;
-import services.ServiceDetailService;
 import services.SparePartService;
 import views.CustomerView;
 import views.DashboardView;
@@ -291,7 +290,7 @@ public class EditService extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Service - Edit service");
+        setTitle("Service - Edit Service");
         setPreferredSize(new java.awt.Dimension(1280, 720));
         getContentPane().setLayout(null);
 
@@ -345,7 +344,7 @@ public class EditService extends javax.swing.JFrame {
         });
 
         jLabel7.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("      Service");
         jLabel7.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -495,7 +494,7 @@ public class EditService extends javax.swing.JFrame {
         getContentPane().add(jTextField3);
         jTextField3.setBounds(480, 460, 240, 22);
 
-        jButton1.setText("Submit");
+        jButton1.setText("EDIT");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);

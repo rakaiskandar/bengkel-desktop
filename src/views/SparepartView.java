@@ -9,6 +9,9 @@ import views.sparepart.AddSparepart;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import models.Session;
+import models.SparePart;
+import services.SparePartService;
+import utils.Formatter;
 
 /**
  *
@@ -27,15 +30,15 @@ public class SparepartView extends javax.swing.JFrame {
         jTable1.getColumnModel().getColumn(0).setPreferredWidth(30);
         String[] columnNames = {"ID", "Name", "Price"};
 
-        services.SparePartService sparePartService = new services.SparePartService();
-        List<models.SparePart> spareParts = sparePartService.getAllSpareParts();
+        SparePartService sparePartService = new SparePartService();
+        List<SparePart> spareParts = sparePartService.getAllSpareParts();
 
         Object[][] data = new Object[spareParts.size()][3];
         for (int i = 0; i < spareParts.size(); i++) {
-            models.SparePart part = spareParts.get(i);
+            SparePart part = spareParts.get(i);
             data[i][0] = part.getId();
             data[i][1] = part.getName();
-            data[i][2] = part.getPrice();
+            data[i][2] = Formatter.toRupiah(part.getPrice());
         }
 
         DefaultTableModel model = new DefaultTableModel(data, columnNames) {
@@ -89,7 +92,7 @@ public class SparepartView extends javax.swing.JFrame {
             int confirm = JOptionPane.showConfirmDialog(this, "Apakah Anda yakin ingin menghapus data ini?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
                 int id = Integer.parseInt(jTable1.getModel().getValueAt(selectedRow, 0).toString());
-                services.SparePartService sparePartService = new services.SparePartService();
+                SparePartService sparePartService = new SparePartService();
                 boolean success = sparePartService.deleteSparePart(id);
                 if (success) {
                     ((DefaultTableModel) jTable1.getModel()).removeRow(selectedRow);

@@ -16,7 +16,6 @@ import views.Login;
 import views.DashboardView;
 import views.CustomerView;
 import views.VehicleView;
-
 import javax.swing.*;
 import java.util.List;
 import models.Car;

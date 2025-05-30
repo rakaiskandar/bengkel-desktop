@@ -40,7 +40,7 @@ public class SparePartService implements SparePartInterface {
 
     @Override
     public List<SparePart> getAllSpareParts() {
-        List<SparePart> list = new ArrayList<SparePart>();
+        List<SparePart> list = new ArrayList<>();
         String sql = "SELECT * FROM spare_parts";
         try (ResultSet rs = db.selectQuery(sql)) {
             while (rs.next()) {

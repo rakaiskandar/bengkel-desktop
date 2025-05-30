@@ -33,9 +33,9 @@ public class AddService extends javax.swing.JFrame {
     /**
      * Creates new form Dashboard
      */
-    private javax.swing.JPanel panelUsedSparepart;
-    private javax.swing.JButton btnAddSparepart;
-    private JScrollPane scrollPaneSparepart;
+    private final javax.swing.JPanel panelUsedSparepart;
+    private final javax.swing.JButton btnAddSparepart;
+    private final JScrollPane scrollPaneSparepart;
 
     public AddService() {
         initComponents();
@@ -64,6 +64,7 @@ public class AddService extends javax.swing.JFrame {
         Vehicle selectedVehicle = (Vehicle) jComboBox1.getSelectedItem();
         String servType = jTextField1.getText();
         String desc = jTextArea1.getText();
+        String cost = jTextField3.getText();
 
         if (selectedVehicle == null || servType.isEmpty() || desc.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Semua field wajib diisi!", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -112,8 +113,8 @@ public class AddService extends javax.swing.JFrame {
 
         // Hitung total biaya sparepart
         ServiceRecordService service = new ServiceRecordService();
-        double totalSpareCost = service.calculateSpareCost(serviceDetails);
-
+        double totalSpareCost = service.calculateSpareCost(serviceDetails) + Double.parseDouble(cost);
+        
         // Simpan ServiceRecord
         ServiceRecord sr = new ServiceRecord(selectedVehicle.getId(), servType, desc, totalSpareCost);
         boolean success = service.addService(sr);
@@ -272,7 +273,7 @@ public class AddService extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Service - Add new service");
+        setTitle("Service - Add Service");
         setPreferredSize(new java.awt.Dimension(1280, 720));
         getContentPane().setLayout(null);
 
@@ -326,7 +327,7 @@ public class AddService extends javax.swing.JFrame {
         });
 
         jLabel7.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("      Service");
         jLabel7.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -393,11 +394,6 @@ public class AddService extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Selamat Datang, ");
-        jLabel8.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel8MouseClicked(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -430,11 +426,6 @@ public class AddService extends javax.swing.JFrame {
         jLabel10.setBounds(770, 140, 230, 32);
 
         jComboBox1.setFocusCycleRoot(true);
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
-            }
-        });
         getContentPane().add(jComboBox1);
         jComboBox1.setBounds(480, 200, 240, 22);
 
@@ -442,8 +433,6 @@ public class AddService extends javax.swing.JFrame {
         jLabel11.setText("Vehicle");
         getContentPane().add(jLabel11);
         jLabel11.setBounds(320, 200, 60, 20);
-
-        jTextField1.setText("jTextField1");
         getContentPane().add(jTextField1);
         jTextField1.setBounds(480, 250, 240, 22);
 
@@ -468,17 +457,10 @@ public class AddService extends javax.swing.JFrame {
         jLabel14.setText("Total Cost");
         getContentPane().add(jLabel14);
         jLabel14.setBounds(320, 460, 110, 20);
-
-        jTextField3.setText("jTextField2");
         getContentPane().add(jTextField3);
         jTextField3.setBounds(480, 460, 240, 22);
 
-        jButton1.setText("Submit");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
+        jButton1.setText("ADD");
         getContentPane().add(jButton1);
         jButton1.setBounds(320, 540, 72, 23);
 
@@ -518,10 +500,6 @@ public class AddService extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jLabel7MouseClicked
 
-    private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jLabel8MouseClicked
-
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
         // TODO add your handling code here:
         DashboardView dsh = new DashboardView();
@@ -529,14 +507,6 @@ public class AddService extends javax.swing.JFrame {
         dsh.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel4MouseClicked
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
         // TODO add your handling code here:

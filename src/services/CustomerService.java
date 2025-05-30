@@ -39,7 +39,7 @@ public class CustomerService implements CustomerInterface {
 
     @Override
     public List<Customer> getAllCustomers() {
-        List<Customer> list = new ArrayList<Customer>();
+        List<Customer> list = new ArrayList<>();
         String sql = "SELECT * FROM customers";
         try {
             ResultSet rs = db.selectQuery(sql);
