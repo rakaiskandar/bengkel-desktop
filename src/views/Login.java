@@ -54,6 +54,7 @@ public class Login extends javax.swing.JFrame {
         bLogin.setBackground(new java.awt.Color(0, 101, 211));
         bLogin.setForeground(new java.awt.Color(255, 255, 255));
         bLogin.setText("Login");
+        bLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         bLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bLoginActionPerformed(evt);
@@ -63,6 +64,7 @@ public class Login extends javax.swing.JFrame {
         bExit.setBackground(new java.awt.Color(0, 101, 211));
         bExit.setForeground(new java.awt.Color(255, 255, 255));
         bExit.setText("Exit");
+        bExit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         bExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bExitActionPerformed(evt);
@@ -76,7 +78,7 @@ public class Login extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("LOGIN");
 
-        jLabel2.setFont(new java.awt.Font("Seravek", 3, 18)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("SiBengkel");
 
@@ -139,7 +141,7 @@ public class Login extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bExit)
                     .addComponent(bLogin))
-                .addContainerGap(89, Short.MAX_VALUE))
+                .addContainerGap(88, Short.MAX_VALUE))
         );
 
         pack();
@@ -159,7 +161,9 @@ public class Login extends javax.swing.JFrame {
                 "Login Berhasil, selamat datang " + logged.getUsername()
             );
             Session.setUser(logged);
-            new DashboardView().setVisible(true);
+            DashboardView dbv = new DashboardView();
+            dbv.setLocationRelativeTo(null);
+            dbv.setVisible(true);
             this.dispose(); // Tutup jendela login
         } else {
             JOptionPane.showMessageDialog(

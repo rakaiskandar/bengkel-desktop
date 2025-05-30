@@ -2,124 +2,155 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package views.vehicle;
+package views.service;
 
-import views.VehicleView;
+import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 import services.VehicleService;
-import models.Vehicle;
-import javax.swing.JOptionPane;
-import models.Car;
-import models.Customer;
-import models.Motorcycle;
+import services.ServiceRecordService;
 import models.Session;
-import services.CustomerService;
+import models.Vehicle;
+import models.ServiceRecord;
 import views.CustomerView;
 import views.DashboardView;
 import views.Login;
 import views.ServiceView;
 import views.SparepartView;
+import views.VehicleView;
 
 /**
  *
- * @author HP
+ * @author sandy
  */
-public class EditVehicle extends javax.swing.JFrame {
-
-    private int vehicleID;
+public class EditService extends javax.swing.JFrame {
 
     /**
      * Creates new form Dashboard
      */
-    public EditVehicle() {
+    
+    private int serviceRecordId;
+    
+    private javax.swing.JPanel panelUsedSparepart;
+    private javax.swing.JButton btnAddSparepart;
+    private JScrollPane scrollPaneSparepart;
+
+    public EditService() {
         initComponents();
-        loadCustomers();
-        jComboBox2.setEnabled(false);
         String username = Session.getUser().getUsername();
         jLabel8.setText("Selamat datang, " + username);
+        loadVehicle();
         jButton1.addActionListener(e -> saveData());
 
+        panelUsedSparepart = new javax.swing.JPanel();
+        panelUsedSparepart.setLayout(new BoxLayout(panelUsedSparepart, BoxLayout.Y_AXIS));
+
+        scrollPaneSparepart = new JScrollPane(panelUsedSparepart);
+        scrollPaneSparepart.setBounds(770, 250, 300, 240);
+        scrollPaneSparepart.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        getContentPane().add(scrollPaneSparepart);
+
+        btnAddSparepart = new javax.swing.JButton("Tambah Sparepart");
+        btnAddSparepart.setBounds(770, 200, 200, 27);
+        getContentPane().add(btnAddSparepart);
+
+        btnAddSparepart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addSparepartRow();
+            }
+        });
+
     }
 
-    private void loadCustomers() {
-        CustomerService customerService = new CustomerService();
-        List<Customer> customers = customerService.getAllCustomers();
-        jComboBox2.removeAllItems();
-        for (Customer c : customers) {
-            jComboBox2.addItem(c);  // tambahkan objek Customer langsung
-        }
-    }
-
-    public EditVehicle(int id) {
+    public EditService(int id) {
         this();
-        this.vehicleID = id;
+        this.serviceRecordId = id;
         loadData(id);
     }
-
+    
     private void loadData(int id) {
-        VehicleService service = new VehicleService();
-        Vehicle vh = service.getVehicleById(id);
-        if (vh != null) {
-            String type = vh.getType();
-            if (type.equals("Car")) {
-                jComboBox1.setSelectedItem("Mobil");
-            } else if (type.equals("Motorcycle")) {
-                jComboBox1.setSelectedItem("Motor");
-            }
-            jTextField3.setText(vh.getModel());
-            jTextField1.setText(vh.getLicensePlate());
-
-            // Pilih customer yang sesuai dari jComboBox2
-            for (int i = 0; i < jComboBox2.getItemCount(); i++) {
-                Customer c = (Customer) jComboBox2.getItemAt(i);
-                if (c.getId() == vh.getCustomerId()) {
-                    jComboBox2.setSelectedIndex(i);
-                    break;
-                }
-            }
-
+        ServiceRecordService service = new ServiceRecordService();
+        ServiceRecord sr = service.getById(id);
+        if (sr != null) {
+            jComboBox1.setSelectedItem(sr.getVehicleId());
+            jTextField1.setText(sr.getType());
+            jTextArea1.setText(sr.getDescription());
+            jTextField3.setText(String.valueOf(sr.getCost()));
         } else {
-            JOptionPane.showMessageDialog(this, "Data Kendaraan tidak ditemukan.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Data sparepart tidak ditemukan.", "Error", JOptionPane.ERROR_MESSAGE);
             dispose();
+        }
+    }   
+    
+    private void saveData() {
+        Vehicle selectedVehicle = (Vehicle) jComboBox1.getSelectedItem();
+        String servType = jTextField1.getText();
+        String desc = jTextArea1.getText();
+        String totalCost = jTextField3.getText();
+
+
+        if (selectedVehicle == null || servType.isEmpty() || desc.isEmpty() || totalCost == null) {
+            JOptionPane.showMessageDialog(this, "Semua field wajib diisi!", "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            double cost = Double.parseDouble(totalCost);
+            ServiceRecord sr = new ServiceRecord(selectedVehicle.getId(), servType, desc, cost);
+            sr.setId(serviceRecordId);
+            sr.setVehicleId(selectedVehicle.getId());
+            sr.setType(servType);
+            sr.setDescription(desc);
+            sr.setCost(cost);
+
+            ServiceRecordService service = new ServiceRecordService();
+            boolean success = service.updateService(sr);
+
+            if (success) {
+                JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan.");
+                dispose();
+                new ServiceView().setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Gagal menambahkan data.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Total cost harus berupa angka.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+    private void loadVehicle() {
+        VehicleService vehicleService = new VehicleService();
+        List<Vehicle> vehicleList = vehicleService.getAllVehicles();
 
-    private void saveData() {
-        String type = (String) jComboBox1.getSelectedItem();
-        String model = jTextField3.getText().trim();
-        String licensePlate = jTextField1.getText().trim();
-        Customer selectedCustomer = (Customer) jComboBox2.getSelectedItem();
-
-        if (selectedCustomer == null) {
-            JOptionPane.showMessageDialog(this, "Pilih customer terlebih dahulu.", "Warning", JOptionPane.WARNING_MESSAGE);
-            return;
+        DefaultComboBoxModel<Vehicle> model = new DefaultComboBoxModel<>();
+        for (Vehicle v : vehicleList) {
+            model.addElement(v);
         }
-        int customerId = selectedCustomer.getId();
+        jComboBox1.setModel(model);
+    }
 
-        if (type == null || type.trim().isEmpty() || model.isEmpty() || licensePlate.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Tipe, Model, dan Plat Nomor wajib diisi!", "Warning", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
+    private void addSparepartRow() {
+        JPanel rowPanel = new JPanel();
+        rowPanel.setLayout(new java.awt.FlowLayout(FlowLayout.LEFT));
+        rowPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        Vehicle vh;
+        JLabel labelNama = new JLabel("Sparepart:");
+        JComboBox<String> comboSparepart = new JComboBox<>(new String[]{"Oli", "Ban", "Kampas Rem"});
+        JLabel labelQty = new JLabel("Qty:");
+        JTextField qtyField = new JTextField(5);
 
-        if ("Mobil".equals(type)) {
-            // Jika ada class Car sebagai subclass Vehicle
-            vh = new Car(vehicleID, customerId, model, licensePlate);
-        } else {
-            vh = new Motorcycle(vehicleID, customerId, model, licensePlate);
-        }
+        labelNama.setFont(new java.awt.Font("Segoe UI", 0, 14));
+        labelQty.setFont(new java.awt.Font("Segoe UI", 0, 14));
 
-        VehicleService service = new VehicleService();
-        boolean success = service.updateVehicle(vh);
+        rowPanel.add(labelNama);
+        rowPanel.add(comboSparepart);
+        rowPanel.add(labelQty);
+        rowPanel.add(qtyField);
 
-        if (success) {
-            JOptionPane.showMessageDialog(this, "Data berhasil disimpan.");
-            dispose();
-            new VehicleView().setVisible(true);
-        } else {
-            JOptionPane.showMessageDialog(this, "Gagal menyimpan data.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        panelUsedSparepart.add(rowPanel);
+        panelUsedSparepart.revalidate();
+        panelUsedSparepart.repaint();
+        
     }
 
     /**
@@ -145,16 +176,18 @@ public class EditVehicle extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
+        jLabel11 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jTextField3 = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -183,7 +216,7 @@ public class EditVehicle extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Dashboard - Vehicle");
+        setTitle("Service - Edit service");
         setPreferredSize(new java.awt.Dimension(1280, 720));
         getContentPane().setLayout(null);
 
@@ -191,10 +224,11 @@ public class EditVehicle extends javax.swing.JFrame {
         jPanel1.setAlignmentX(0.0F);
 
         jLabel3.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("      Logout");
         jLabel3.setToolTipText("");
+        jLabel3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabel3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -206,6 +240,7 @@ public class EditVehicle extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("      Home");
+        jLabel4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabel4.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel4MouseClicked(evt);
@@ -216,6 +251,7 @@ public class EditVehicle extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("      Sparepart");
+        jLabel5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel5MouseClicked(evt);
@@ -226,6 +262,7 @@ public class EditVehicle extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("      Vehicle");
+        jLabel6.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel6MouseClicked(evt);
@@ -236,6 +273,7 @@ public class EditVehicle extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("      Service");
+        jLabel7.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel7MouseClicked(evt);
@@ -251,6 +289,7 @@ public class EditVehicle extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("      Customer");
+        jLabel2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel2MouseClicked(evt);
@@ -298,6 +337,11 @@ public class EditVehicle extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Selamat Datang, ");
+        jLabel8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel8MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -319,57 +363,71 @@ public class EditVehicle extends javax.swing.JFrame {
         getContentPane().add(jPanel7);
         jPanel7.setBounds(280, 0, 1270, 108);
 
-        jButton1.setText("UPDATE");
-        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        getContentPane().add(jButton1);
-        jButton1.setBounds(330, 360, 90, 27);
-
-        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel9.setText("Plat Nomor");
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel9.setText("Edit Service");
         getContentPane().add(jLabel9);
-        jLabel9.setBounds(330, 320, 90, 30);
+        jLabel9.setBounds(320, 110, 210, 80);
 
-        jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        getContentPane().add(jTextField1);
-        jTextField1.setBounds(450, 320, 230, 30);
-
-        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel10.setText("Customer");
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel10.setText("Used Sparepart");
         getContentPane().add(jLabel10);
-        jLabel10.setBounds(330, 200, 100, 30);
+        jLabel10.setBounds(770, 140, 230, 32);
 
-        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel11.setText("Model");
-        getContentPane().add(jLabel11);
-        jLabel11.setBounds(330, 280, 60, 30);
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Motor", "Mobil", " " }));
-        jComboBox1.setToolTipText("");
+        jComboBox1.setFocusCycleRoot(true);
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
             }
         });
         getContentPane().add(jComboBox1);
-        jComboBox1.setBounds(450, 240, 230, 30);
+        jComboBox1.setBounds(480, 200, 240, 26);
 
-        jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel12.setText("Tipe");
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel11.setText("Vehicle");
+        getContentPane().add(jLabel11);
+        jLabel11.setBounds(320, 200, 60, 20);
+        getContentPane().add(jTextField1);
+        jTextField1.setBounds(480, 250, 240, 26);
+
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel12.setText("Service Type");
         getContentPane().add(jLabel12);
-        jLabel12.setBounds(330, 240, 60, 30);
+        jLabel12.setBounds(320, 250, 110, 20);
 
-        jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        getContentPane().add(jTextField3);
-        jTextField3.setBounds(450, 280, 230, 30);
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
 
-        jComboBox2.setPreferredSize(new java.awt.Dimension(1280, 720));
-        getContentPane().add(jComboBox2);
-        jComboBox2.setBounds(450, 200, 230, 30);
+        getContentPane().add(jScrollPane1);
+        jScrollPane1.setBounds(480, 300, 238, 130);
 
-        jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel13.setText("Edit vehicle");
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel13.setText("Description");
         getContentPane().add(jLabel13);
-        jLabel13.setBounds(330, 110, 210, 80);
+        jLabel13.setBounds(320, 300, 110, 20);
+
+        jLabel14.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel14.setText("Total Cost");
+        getContentPane().add(jLabel14);
+        jLabel14.setBounds(320, 460, 110, 20);
+
+        jTextField3.setToolTipText("");
+        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField3ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jTextField3);
+        jTextField3.setBounds(480, 460, 240, 26);
+
+        jButton1.setText("Submit");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton1);
+        jButton1.setBounds(320, 540, 76, 27);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -383,6 +441,14 @@ public class EditVehicle extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jLabel3MouseClicked
 
+    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
+        // TODO add your handling code here:
+        SparepartView spv = new SparepartView();
+        spv.setLocationRelativeTo(null);
+        spv.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jLabel5MouseClicked
+
     private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
         // TODO add your handling code here:
         VehicleView vhc = new VehicleView();
@@ -393,11 +459,15 @@ public class EditVehicle extends javax.swing.JFrame {
 
     private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
         // TODO add your handling code here:
-        ServiceView svc = new ServiceView();
-        svc.setLocationRelativeTo(null);
-        svc.setVisible(true);
+        ServiceView svv = new ServiceView();
+        svv.setLocationRelativeTo(null);
+        svv.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel7MouseClicked
+
+    private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel8MouseClicked
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
         // TODO add your handling code here:
@@ -407,6 +477,14 @@ public class EditVehicle extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jLabel4MouseClicked
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
         // TODO add your handling code here:
         CustomerView cst = new CustomerView();
@@ -415,18 +493,9 @@ public class EditVehicle extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jLabel2MouseClicked
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
-
-    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
-        // TODO add your handling code here:
-        // TODO add your handling code here:
-        SparepartView spv = new SparepartView();
-        spv.setLocationRelativeTo(null);
-        spv.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_jLabel5MouseClicked
+    }//GEN-LAST:event_jTextField3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -445,30 +514,14 @@ public class EditVehicle extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(EditVehicle.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EditService.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(EditVehicle.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EditService.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(EditVehicle.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EditService.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(EditVehicle.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EditService.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -489,7 +542,7 @@ public class EditVehicle extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                EditVehicle view = new EditVehicle();
+                EditService view = new EditService();
                 view.setVisible(true);
             }
         });
@@ -497,8 +550,7 @@ public class EditVehicle extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<Customer> jComboBox2;
+    private javax.swing.JComboBox<Vehicle> jComboBox1;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JFrame jFrame2;
     private javax.swing.JLabel jLabel1;
@@ -506,6 +558,7 @@ public class EditVehicle extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -518,6 +571,8 @@ public class EditVehicle extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables

@@ -4,13 +4,9 @@
  */
 package views.vehicle;
 
-import views.sparepart.*;
 import views.SparepartView;
 import views.*;
-import services.SparePartService;
-import models.SparePart;
 import javax.swing.JOptionPane;
-import models.Session;
 import models.Vehicle;
 import models.Customer;
 import services.VehicleService;
@@ -117,6 +113,7 @@ public class AddVehicle extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jComboBox2 = new javax.swing.JComboBox<>();
+        jLabel13 = new javax.swing.JLabel();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -175,9 +172,14 @@ public class AddVehicle extends javax.swing.JFrame {
         });
 
         jLabel5.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("      Sparepart");
+        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel5MouseClicked(evt);
+            }
+        });
 
         jLabel6.setBackground(new java.awt.Color(0, 0, 0));
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -277,13 +279,14 @@ public class AddVehicle extends javax.swing.JFrame {
         jPanel7.setBounds(280, 0, 1270, 108);
 
         jButton1.setText("ADD");
+        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         getContentPane().add(jButton1);
-        jButton1.setBounds(330, 290, 72, 23);
+        jButton1.setBounds(330, 360, 76, 27);
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel10.setText("Customer");
         getContentPane().add(jLabel10);
-        jLabel10.setBounds(330, 130, 100, 30);
+        jLabel10.setBounds(330, 200, 100, 30);
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Motor", "Mobil", " " }));
         jComboBox1.setToolTipText("");
@@ -293,42 +296,49 @@ public class AddVehicle extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jComboBox1);
-        jComboBox1.setBounds(450, 170, 230, 30);
+        jComboBox1.setBounds(450, 240, 230, 30);
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel12.setText("Tipe");
         getContentPane().add(jLabel12);
-        jLabel12.setBounds(330, 170, 60, 30);
+        jLabel12.setBounds(330, 240, 60, 30);
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel11.setText("Model");
         getContentPane().add(jLabel11);
-        jLabel11.setBounds(330, 210, 60, 30);
+        jLabel11.setBounds(330, 280, 60, 30);
 
         jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         getContentPane().add(jTextField3);
-        jTextField3.setBounds(450, 210, 230, 30);
+        jTextField3.setBounds(450, 280, 230, 30);
 
         jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         getContentPane().add(jTextField1);
-        jTextField1.setBounds(450, 250, 230, 30);
+        jTextField1.setBounds(450, 320, 230, 30);
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel9.setText("Plat Nomor");
         getContentPane().add(jLabel9);
-        jLabel9.setBounds(330, 250, 90, 30);
+        jLabel9.setBounds(330, 320, 90, 30);
 
         jComboBox2.setFocusCycleRoot(true);
         getContentPane().add(jComboBox2);
-        jComboBox2.setBounds(450, 130, 230, 30);
+        jComboBox2.setBounds(450, 200, 230, 30);
+
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel13.setText("Add new vehicle");
+        getContentPane().add(jLabel13);
+        jLabel13.setBounds(330, 110, 210, 80);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
         // TODO add your handling code here:
-        Session.clear();
-        new Login().setVisible(true);
+        Session.clear();       
+        Login lgn = new Login();
+        lgn.setLocationRelativeTo(null);
+        lgn.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel3MouseClicked
 
@@ -342,6 +352,10 @@ public class AddVehicle extends javax.swing.JFrame {
 
     private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
         // TODO add your handling code here:
+        ServiceView svc = new ServiceView();
+        svc.setLocationRelativeTo(null);
+        svc.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jLabel7MouseClicked
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
@@ -363,6 +377,14 @@ public class AddVehicle extends javax.swing.JFrame {
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
+        // TODO add your handling code here:
+        SparepartView spv = new SparepartView();
+        spv.setLocationRelativeTo(null);
+        spv.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jLabel5MouseClicked
 
     /**
      * @param args the command line arguments
@@ -425,6 +447,7 @@ public class AddVehicle extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

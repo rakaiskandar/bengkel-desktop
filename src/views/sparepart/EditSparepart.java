@@ -107,6 +107,7 @@ public class EditSparepart extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -165,9 +166,14 @@ public class EditSparepart extends javax.swing.JFrame {
         });
 
         jLabel5.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("      Sparepart");
+        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel5MouseClicked(evt);
+            }
+        });
 
         jLabel6.setBackground(new java.awt.Color(0, 0, 0));
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -267,34 +273,42 @@ public class EditSparepart extends javax.swing.JFrame {
         jPanel7.setBounds(280, 0, 1270, 108);
 
         jButton1.setText("UPDATE");
+        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         getContentPane().add(jButton1);
-        jButton1.setBounds(330, 230, 90, 23);
+        jButton1.setBounds(330, 290, 90, 27);
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel9.setText("Price");
         getContentPane().add(jLabel9);
-        jLabel9.setBounds(330, 180, 60, 30);
+        jLabel9.setBounds(330, 240, 60, 30);
 
         jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         getContentPane().add(jTextField1);
-        jTextField1.setBounds(410, 180, 230, 30);
+        jTextField1.setBounds(410, 240, 230, 30);
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel10.setText("Name");
         getContentPane().add(jLabel10);
-        jLabel10.setBounds(330, 140, 60, 30);
+        jLabel10.setBounds(330, 200, 60, 30);
 
         jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         getContentPane().add(jTextField2);
-        jTextField2.setBounds(410, 140, 230, 30);
+        jTextField2.setBounds(410, 200, 230, 30);
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel11.setText("Edit sparepart");
+        getContentPane().add(jLabel11);
+        jLabel11.setBounds(330, 110, 210, 80);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
         // TODO add your handling code here:
-        Session.clear();
-        new Login().setVisible(true);
+        Session.clear();       
+        Login lgn = new Login();
+        lgn.setLocationRelativeTo(null);
+        lgn.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel3MouseClicked
 
@@ -308,6 +322,10 @@ public class EditSparepart extends javax.swing.JFrame {
 
     private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
         // TODO add your handling code here:
+        ServiceView svc = new ServiceView();
+        svc.setLocationRelativeTo(null);
+        svc.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jLabel7MouseClicked
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
@@ -325,6 +343,14 @@ public class EditSparepart extends javax.swing.JFrame {
         cst.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel2MouseClicked
+
+    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
+        // TODO add your handling code here:
+        SparepartView spv = new SparepartView();
+        spv.setLocationRelativeTo(null);
+        spv.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jLabel5MouseClicked
 
     /**
      * @param args the command line arguments
@@ -383,6 +409,7 @@ public class EditSparepart extends javax.swing.JFrame {
     private javax.swing.JFrame jFrame2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
