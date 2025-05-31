@@ -8,7 +8,7 @@ package views;
 import java.awt.Image;
 import services.UserService;
 import javax.swing.*;
-import models.Session;
+import utils.Session;
 import models.User;
 /**
  *

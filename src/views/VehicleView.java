@@ -10,7 +10,7 @@ import java.awt.Image;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import models.Customer;
-import models.Session;
+import utils.Session;
 import models.Vehicle;
 import services.CustomerService;
 import services.VehicleService;
@@ -105,7 +105,7 @@ public class VehicleView extends javax.swing.JFrame {
         int selectedRow = jTable1.getSelectedRow();
         if (selectedRow != -1) {
             int id = Integer.parseInt(jTable1.getModel().getValueAt(selectedRow, 0).toString());
-            EditVehicle s = new EditVehicle();
+            EditVehicle s = new EditVehicle(id);
             s.setLocationRelativeTo(null);
             s.setVisible(true);
             this.dispose();

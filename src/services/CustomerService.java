@@ -32,7 +32,7 @@ public class CustomerService implements CustomerInterface {
                 );
             }
         } catch (SQLException e) {
-            System.out.println("Error getCustomerIdAndNameById: " + e.getMessage());
+            System.out.println("Error getCustomerById: " + e.getMessage());
         }
         return null;
     }

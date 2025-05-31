@@ -19,6 +19,8 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Stream;
+import models.Car;
+import models.Motorcycle;
 import models.ServiceDetail;
 import models.ServiceRecord;
 import models.SparePart;
@@ -67,8 +69,16 @@ public class InvoiceGenerator {
             String tipe = (vehicle instanceof models.Motorcycle)
                     ? "Motorcycle"
                     : "Car";
+            
+            Vehicle model;
+            if (tipe.equals("Car")) {
+                model = new Car(vehicle.getCustomerId(), vehicle.getModel(), vehicle.getLicensePlate());
+            } else {
+                model = new Motorcycle(vehicle.getCustomerId(), vehicle.getModel(), vehicle.getLicensePlate());
+            }
+            
             document.add(new Paragraph("Tipe         : " + tipe, normalFont));
-            document.add(new Paragraph("Model        : " + vehicle.getModel(), normalFont));
+            document.add(new Paragraph("Model        : " + model.printVehicleInfo(), normalFont));
             document.add(new Paragraph("Plat Nomor   : " + vehicle.getLicensePlate(), normalFont));
 
             // Detail Servis

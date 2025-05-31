@@ -11,7 +11,7 @@ import views.*;
 import services.SparePartService;
 import models.SparePart;
 import javax.swing.JOptionPane;
-import models.Session;
+import utils.Session;
 
 /**
  *

@@ -19,8 +19,8 @@ public class Motorcycle extends Vehicle {
     }
     
     @Override
-    public void printVehicleInfo() {
-        System.out.println("Motor - Model: " + model + ", Plat: " + licensePlate);
+    public String printVehicleInfo() {
+        return "Motor - " + model;
     }
     
 }

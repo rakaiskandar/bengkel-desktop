@@ -1,5 +1,7 @@
 # Tugas Besar PBO KOM4B2025
 
+<img src="src/assets/sibengkel.png" alt="logo" width="500">
+
 SIBENGKEL adalah aplikasi desktop berbasis desktop Java yang digunakan untuk pengelolaan data servis kendaraan di bengkel.
 
 ## Fitur
@@ -45,9 +47,13 @@ git clone https://github.com/rakaiskandar/bengkel-desktop.git
 
 3. Atur koneksi database Anda di file Database.java
 
-4. Jalankan Main.java atau gunakan tampilan GUI yang telah disediakan
+5. Jalankan Main.java atau gunakan tampilan GUI yang telah disediakan
 
-5. Invoice akan tersimpan secara otomatis ke folder Downloads
+6. Login dengan username default
+```bash
+username = admin
+password = ADMIN1#3
+```
 
 ## Dependensi
 Pastikan library berikut tersedia di classpath:
@@ -60,7 +66,7 @@ Pastikan library berikut tersedia di classpath:
 * Format harga dan biaya menggunakan utils.Formatter yang menyesuaikan ke format mata uang Indonesia (Rp).
 
 ## Credit
-Dosen Pengampu: Erlangga, S.Kom., M.T.
+Dosen Pengampu: Erlangga, S.Kom., M.T. \
 Kelompok 5: 
 * Ellyazar Swastiko (2309749)
 * Ma'rifatu Ambiya (2300822)

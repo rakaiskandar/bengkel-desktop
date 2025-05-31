@@ -10,7 +10,7 @@ import javax.swing.ImageIcon;
 import views.*;
 import javax.swing.JOptionPane;
 import models.Customer;
-import models.Session;
+import utils.Session;
 import services.CustomerService;
 
 /**

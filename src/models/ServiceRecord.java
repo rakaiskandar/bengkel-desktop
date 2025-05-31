@@ -12,11 +12,11 @@ import services.ServiceDetailService;
  * @author HP
  */
 public class ServiceRecord {
-    private int id;
-    private int vehicleId;
-    private String type;
-    private String description;
-    private double cost;
+    protected int id;
+    protected int vehicleId;
+    protected String type;
+    protected String description;
+    protected double cost;
 
     public ServiceRecord() {
     }

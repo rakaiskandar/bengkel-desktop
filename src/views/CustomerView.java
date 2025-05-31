@@ -10,7 +10,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import models.Customer;
-import models.Session;
+import utils.Session;
 import services.CustomerService;
 import views.customer.AddCustomer;
 import views.customer.EditCustomer;
@@ -88,7 +88,7 @@ public class CustomerView extends javax.swing.JFrame {
         int selectedRow = jTable1.getSelectedRow();
         if (selectedRow != -1) {
             int id = Integer.parseInt(jTable1.getModel().getValueAt(selectedRow, 0).toString());
-            EditCustomer cac = new EditCustomer();
+            EditCustomer cac = new EditCustomer(id);
             cac.setLocationRelativeTo(null);
             cac.setVisible(true);
             this.dispose();

@@ -11,7 +11,7 @@ import models.Vehicle;
 import models.Customer;
 import services.VehicleService;
 import services.CustomerService;
-import models.Session;
+import utils.Session;
 import views.Login;
 import views.DashboardView;
 import views.CustomerView;

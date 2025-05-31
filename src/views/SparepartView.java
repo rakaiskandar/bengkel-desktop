@@ -10,7 +10,7 @@ import java.awt.Image;
 import views.sparepart.AddSparepart;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import models.Session;
+import utils.Session;
 import models.SparePart;
 import services.SparePartService;
 import utils.Formatter;
@@ -90,7 +90,7 @@ public class SparepartView extends javax.swing.JFrame {
         int selectedRow = jTable1.getSelectedRow();
         if (selectedRow != -1) {
             int id = Integer.parseInt(jTable1.getModel().getValueAt(selectedRow, 0).toString());
-            EditSparepart s = new EditSparepart();
+            EditSparepart s = new EditSparepart(id);
             s.setLocationRelativeTo(null);
             s.setVisible(true);
             this.dispose();

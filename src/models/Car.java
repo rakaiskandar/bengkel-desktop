@@ -9,7 +9,7 @@ package models;
  * @author HP
  */
 public class Car extends Vehicle {
-
+    
     public Car(int customerId, String model, String licensePlate) {
         super(customerId, "Car", model, licensePlate);
     }
@@ -19,8 +19,8 @@ public class Car extends Vehicle {
     }
 
     @Override
-    public void printVehicleInfo() {
-        System.out.println("Mobil - Model: " + model + ", Plat: " + licensePlate);
+    public String printVehicleInfo() {
+        return "Mobil - " + model;
     }
 
 }

@@ -7,7 +7,7 @@ package views;
 import com.formdev.flatlaf.FlatClientProperties;
 import javax.swing.ImageIcon;
 import java.awt.Image;
-import models.Session;
+import utils.Session;
 import utils.DataCounter;
 
 /**

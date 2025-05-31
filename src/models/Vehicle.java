@@ -14,7 +14,7 @@ public abstract class Vehicle {
     protected String type; // e.g. "Car" or "Motorcycle"
     protected String model;
     protected String licensePlate;
-
+    
     public Vehicle(int id, int customerId, String type, String model, String licensePlate) {
         this.id = id;
         this.customerId = customerId;
@@ -75,5 +75,5 @@ public abstract class Vehicle {
         return this.licensePlate;
     }
     
-    public abstract void printVehicleInfo();
+    public abstract String printVehicleInfo();
 }

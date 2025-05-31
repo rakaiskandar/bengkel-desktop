@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 import models.Car;
 import models.Customer;
 import models.Motorcycle;
-import models.Session;
+import utils.Session;
 import services.CustomerService;
 import views.CustomerView;
 import views.DashboardView;
@@ -46,7 +46,7 @@ public class EditVehicle extends javax.swing.JFrame {
         Image image = originalIcon.getImage().getScaledInstance(200, 32, Image.SCALE_SMOOTH);
         ImageIcon resizedIcon = new ImageIcon(image);
         jLabel1.setIcon(resizedIcon);
-
+    
     }
 
     private void loadCustomers() {

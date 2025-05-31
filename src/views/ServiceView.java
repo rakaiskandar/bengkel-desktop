@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import models.ServiceDetail;
 import models.ServiceRecord;
-import models.Session;
+import utils.Session;
 import models.SparePart;
 import models.Vehicle;
 import services.ServiceDetailService;
