@@ -22,13 +22,13 @@ public class CustomerService implements CustomerInterface {
 
     @Override
     public Customer getCustomerById(int id) {
-        String sql = "SELECT id, name FROM customers WHERE id = ?";
+        String sql = "SELECT id, name, phone FROM customers WHERE id = ?";
         try (ResultSet rs = db.selectQuery(sql, id)) {
             if (rs.next()) {
                 return new Customer(
                         rs.getInt("id"),
                         rs.getString("name"),
-                        null // phone tidak diambil, jadi null
+                        rs.getString("phone")
                 );
             }
         } catch (SQLException e) {
