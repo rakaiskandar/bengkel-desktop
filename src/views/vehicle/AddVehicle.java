@@ -20,6 +20,8 @@ import javax.swing.*;
 import java.util.List;
 import models.Car;
 import models.Motorcycle;
+import javax.swing.ImageIcon;
+import java.awt.Image;
 
 /**
  *
@@ -33,7 +35,14 @@ public class AddVehicle extends javax.swing.JFrame {
     public AddVehicle() {
         initComponents();
         String username = Session.getUser().getUsername();
-        jLabel8.setText("Selamat datang, " + username);
+        jLabel8.setText("Welcome, " + username);
+        
+        getContentPane().setBackground(new java.awt.Color(239, 239, 239));
+        ImageIcon originalIcon = new ImageIcon(getClass().getResource("/assets/sibengkel.png"));
+        Image image = originalIcon.getImage().getScaledInstance(200, 32, Image.SCALE_SMOOTH);
+        ImageIcon resizedIcon = new ImageIcon(image);
+        jLabel1.setIcon(resizedIcon);
+        
         loadCustomers();
         jButton1.addActionListener(e -> saveData());
     }
@@ -73,8 +82,10 @@ public class AddVehicle extends javax.swing.JFrame {
 
         if (success) {
             JOptionPane.showMessageDialog(this, "Data kendaraan berhasil ditambahkan.");
-            dispose();
-            new VehicleView().setVisible(true);
+            VehicleView s = new VehicleView();
+            s.setLocationRelativeTo(null);
+            s.setVisible(true);
+            this.dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Gagal menambahkan data kendaraan.", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -145,11 +156,11 @@ public class AddVehicle extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(1280, 720));
         getContentPane().setLayout(null);
 
-        jPanel1.setBackground(new java.awt.Color(0, 101, 211));
+        jPanel1.setBackground(new java.awt.Color(27, 92, 131));
         jPanel1.setAlignmentX(0.0F);
 
         jLabel3.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("      Logout");
         jLabel3.setToolTipText("");
@@ -184,7 +195,7 @@ public class AddVehicle extends javax.swing.JFrame {
         });
 
         jLabel6.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("      Vehicle");
         jLabel6.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -208,7 +219,6 @@ public class AddVehicle extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 3, 30)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("SiBengkel");
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -255,7 +265,7 @@ public class AddVehicle extends javax.swing.JFrame {
         getContentPane().add(jPanel1);
         jPanel1.setBounds(0, 0, 280, 840);
 
-        jPanel7.setBackground(new java.awt.Color(0, 122, 255));
+        jPanel7.setBackground(new java.awt.Color(34, 116, 165));
         jPanel7.setAlignmentX(0.0F);
 
         jLabel8.setBackground(new java.awt.Color(0, 0, 0));
@@ -283,10 +293,12 @@ public class AddVehicle extends javax.swing.JFrame {
         getContentPane().add(jPanel7);
         jPanel7.setBounds(280, 0, 1270, 108);
 
-        jButton1.setText("ADD");
+        jButton1.setBackground(new java.awt.Color(242, 208, 164));
+        jButton1.setForeground(new java.awt.Color(51, 51, 51));
+        jButton1.setText("Submit");
         jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         getContentPane().add(jButton1);
-        jButton1.setBounds(330, 360, 72, 23);
+        jButton1.setBounds(330, 370, 90, 30);
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel10.setText("Customer");
@@ -331,7 +343,7 @@ public class AddVehicle extends javax.swing.JFrame {
         jComboBox2.setBounds(450, 200, 230, 30);
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel13.setText("Add New Vehicle");
+        jLabel13.setText("Add new vehicle");
         getContentPane().add(jLabel13);
         jLabel13.setBounds(330, 110, 210, 80);
 

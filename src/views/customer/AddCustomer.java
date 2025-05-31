@@ -5,6 +5,8 @@
 package views.customer;
 
 
+import java.awt.Image;
+import javax.swing.ImageIcon;
 import views.*;
 import javax.swing.JOptionPane;
 import models.Customer;
@@ -23,8 +25,14 @@ public class AddCustomer extends javax.swing.JFrame {
     public AddCustomer() {
         initComponents();
         String username = Session.getUser().getUsername();
-        jLabel8.setText("Selamat datang, " + username);
+        jLabel8.setText("Welcome, " + username);
         jButton1.addActionListener(e -> saveData());
+        
+        getContentPane().setBackground(new java.awt.Color(239, 239, 239));
+        ImageIcon originalIcon = new ImageIcon(getClass().getResource("/assets/sibengkel.png"));
+        Image image = originalIcon.getImage().getScaledInstance(200, 32, Image.SCALE_SMOOTH);
+        ImageIcon resizedIcon = new ImageIcon(image);
+        jLabel1.setIcon(resizedIcon);
     }
 
     private void saveData() {
@@ -46,8 +54,10 @@ public class AddCustomer extends javax.swing.JFrame {
 
             if (success) {
                 JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan.");
-                dispose();
-                new CustomerView().setVisible(true);
+                CustomerView c = new CustomerView();
+                c.setLocationRelativeTo(null);
+                c.setVisible(true);
+                this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Gagal menambahkan data.", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -117,11 +127,11 @@ public class AddCustomer extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(1280, 720));
         getContentPane().setLayout(null);
 
-        jPanel1.setBackground(new java.awt.Color(0, 101, 211));
+        jPanel1.setBackground(new java.awt.Color(27, 92, 131));
         jPanel1.setAlignmentX(0.0F);
 
         jLabel3.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("      Logout");
         jLabel3.setToolTipText("");
@@ -180,10 +190,9 @@ public class AddCustomer extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 3, 30)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("SiBengkel");
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("      Customer");
         jLabel2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -227,7 +236,7 @@ public class AddCustomer extends javax.swing.JFrame {
         getContentPane().add(jPanel1);
         jPanel1.setBounds(0, 0, 280, 840);
 
-        jPanel7.setBackground(new java.awt.Color(0, 122, 255));
+        jPanel7.setBackground(new java.awt.Color(34, 116, 165));
         jPanel7.setAlignmentX(0.0F);
 
         jLabel8.setBackground(new java.awt.Color(0, 0, 0));
@@ -255,9 +264,11 @@ public class AddCustomer extends javax.swing.JFrame {
         getContentPane().add(jPanel7);
         jPanel7.setBounds(280, 0, 1270, 108);
 
-        jButton1.setText("ADD");
+        jButton1.setBackground(new java.awt.Color(242, 208, 164));
+        jButton1.setForeground(new java.awt.Color(51, 51, 51));
+        jButton1.setText("Submit");
         getContentPane().add(jButton1);
-        jButton1.setBounds(330, 290, 72, 23);
+        jButton1.setBounds(330, 290, 90, 30);
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel9.setText("Phone");
@@ -278,7 +289,7 @@ public class AddCustomer extends javax.swing.JFrame {
         jTextField2.setBounds(410, 200, 230, 30);
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel11.setText("Add New Customer");
+        jLabel11.setText("Add new customer");
         getContentPane().add(jLabel11);
         jLabel11.setBounds(330, 110, 220, 80);
 

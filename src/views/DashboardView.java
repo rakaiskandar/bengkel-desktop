@@ -4,6 +4,9 @@
  */
 package views;
 
+import com.formdev.flatlaf.FlatClientProperties;
+import javax.swing.ImageIcon;
+import java.awt.Image;
 import models.Session;
 import utils.DataCounter;
 
@@ -18,19 +21,29 @@ public class DashboardView extends javax.swing.JFrame {
      */
     public DashboardView() {
         initComponents();
-        String username = Session.getUser().getUsername();
-        jLabel8.setText("Selamat datang, " + username);
         
+        String username = Session.getUser().getUsername();
+        jLabel8.setText("Welcome, " + username);
         DataCounter counter = new DataCounter();
 
         int totalCustomers = counter.countCustomers();
         int totalSpareparts = counter.countSpareparts();
         int totalVehicles = counter.countVehicles();
-        
+
         jLabel12.setText(String.valueOf(totalCustomers + " Orang"));
         jLabel13.setText(String.valueOf(totalVehicles + " Unit"));
         jLabel14.setText(String.valueOf(totalSpareparts + " Item"));
         counter.close();
+        
+        jPanel11.putClientProperty(FlatClientProperties.STYLE, "arc: 16");
+        jPanel10.putClientProperty(FlatClientProperties.STYLE, "arc: 16");
+        jPanel3.putClientProperty(FlatClientProperties.STYLE, "arc: 16");
+
+        getContentPane().setBackground(new java.awt.Color(239, 239, 239));
+        ImageIcon originalIcon = new ImageIcon(getClass().getResource("/assets/sibengkel.png"));
+        Image image = originalIcon.getImage().getScaledInstance(200, 32, Image.SCALE_SMOOTH);
+        ImageIcon resizedIcon = new ImageIcon(image);
+        jLabel1.setIcon(resizedIcon);
     }
 
     /**
@@ -97,11 +110,11 @@ public class DashboardView extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(1280, 720));
         getContentPane().setLayout(null);
 
-        jPanel1.setBackground(new java.awt.Color(0, 101, 211));
+        jPanel1.setBackground(new java.awt.Color(27, 92, 131));
         jPanel1.setAlignmentX(0.0F);
 
         jLabel3.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("      Logout");
         jLabel3.setToolTipText("");
@@ -161,7 +174,6 @@ public class DashboardView extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 3, 30)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("SiBengkel");
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -208,13 +220,14 @@ public class DashboardView extends javax.swing.JFrame {
         getContentPane().add(jPanel1);
         jPanel1.setBounds(0, 0, 280, 840);
 
-        jPanel3.setBackground(new java.awt.Color(255, 118, 81));
+        jPanel3.setBackground(new java.awt.Color(242, 208, 164));
 
-        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(51, 51, 51));
         jLabel11.setText("Total Spare Part");
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel14.setForeground(new java.awt.Color(51, 51, 51));
         jLabel14.setText("0");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -222,7 +235,7 @@ public class DashboardView extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(140, Short.MAX_VALUE)
+                .addContainerGap(125, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel11)
                     .addComponent(jLabel14))
@@ -235,13 +248,13 @@ public class DashboardView extends javax.swing.JFrame {
                 .addComponent(jLabel11)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel14)
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel3);
         jPanel3.setBounds(880, 140, 250, 110);
 
-        jPanel7.setBackground(new java.awt.Color(0, 122, 255));
+        jPanel7.setBackground(new java.awt.Color(34, 116, 165));
         jPanel7.setAlignmentX(0.0F);
 
         jLabel8.setBackground(new java.awt.Color(0, 0, 0));
@@ -254,28 +267,29 @@ public class DashboardView extends javax.swing.JFrame {
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGap(27, 27, 27)
+                .addGap(29, 29, 29)
                 .addComponent(jLabel8)
-                .addContainerGap(1064, Short.MAX_VALUE))
+                .addContainerGap(1062, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
-                .addContainerGap(40, Short.MAX_VALUE)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGap(37, 37, 37)
                 .addComponent(jLabel8)
-                .addGap(36, 36, 36))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel7);
         jPanel7.setBounds(280, 0, 1270, 108);
 
-        jPanel10.setBackground(new java.awt.Color(255, 118, 81));
+        jPanel10.setBackground(new java.awt.Color(242, 208, 164));
 
-        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(51, 51, 51));
         jLabel10.setText("Total Vehicle");
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel13.setForeground(new java.awt.Color(51, 51, 51));
         jLabel13.setText("0");
 
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
@@ -283,7 +297,7 @@ public class DashboardView extends javax.swing.JFrame {
         jPanel10Layout.setHorizontalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
-                .addContainerGap(157, Short.MAX_VALUE)
+                .addContainerGap(147, Short.MAX_VALUE)
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel13)
                     .addComponent(jLabel10))
@@ -292,7 +306,7 @@ public class DashboardView extends javax.swing.JFrame {
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
-                .addContainerGap(21, Short.MAX_VALUE)
+                .addContainerGap(17, Short.MAX_VALUE)
                 .addComponent(jLabel10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel13)
@@ -300,15 +314,16 @@ public class DashboardView extends javax.swing.JFrame {
         );
 
         getContentPane().add(jPanel10);
-        jPanel10.setBounds(600, 140, 250, 110);
+        jPanel10.setBounds(590, 140, 250, 110);
 
-        jPanel11.setBackground(new java.awt.Color(255, 118, 81));
+        jPanel11.setBackground(new java.awt.Color(242, 208, 164));
 
-        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(51, 51, 51));
         jLabel9.setText("Total Customer");
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel12.setForeground(new java.awt.Color(51, 51, 51));
         jLabel12.setText("0");
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
@@ -316,7 +331,7 @@ public class DashboardView extends javax.swing.JFrame {
         jPanel11Layout.setHorizontalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
-                .addContainerGap(147, Short.MAX_VALUE)
+                .addContainerGap(131, Short.MAX_VALUE)
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel12)
                     .addComponent(jLabel9))
@@ -325,7 +340,7 @@ public class DashboardView extends javax.swing.JFrame {
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
-                .addContainerGap(21, Short.MAX_VALUE)
+                .addContainerGap(17, Short.MAX_VALUE)
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel12)
@@ -340,7 +355,7 @@ public class DashboardView extends javax.swing.JFrame {
 
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
         // TODO add your handling code here:                                     
-        Session.clear();       
+        Session.clear();
         Login lgn = new Login();
         lgn.setLocationRelativeTo(null);
         lgn.setVisible(true);

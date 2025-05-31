@@ -40,7 +40,7 @@ public class AddService extends javax.swing.JFrame {
     public AddService() {
         initComponents();
         String username = Session.getUser().getUsername();
-        jLabel8.setText("Selamat datang, " + username);
+        jLabel8.setText("Welcome, " + username);
         loadVehicle();
         jButton1.addActionListener(e -> saveData());
 
@@ -57,6 +57,12 @@ public class AddService extends javax.swing.JFrame {
         getContentPane().add(btnAddSparepart);
 
         btnAddSparepart.addActionListener(e -> addSparepartRow(new ServiceDetail()));
+
+        getContentPane().setBackground(new java.awt.Color(239, 239, 239));
+        ImageIcon originalIcon = new ImageIcon(getClass().getResource("/assets/sibengkel.png"));
+        Image image = originalIcon.getImage().getScaledInstance(200, 32, Image.SCALE_SMOOTH);
+        ImageIcon resizedIcon = new ImageIcon(image);
+        jLabel1.setIcon(resizedIcon);
 
     }
 
@@ -143,8 +149,10 @@ public class AddService extends javax.swing.JFrame {
         }
 
         JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan.");
-        dispose();
-        new ServiceView().setVisible(true);
+        ServiceView s = new ServiceView();
+        s.setLocationRelativeTo(null);
+        s.setVisible(true);
+        this.dispose();
     }
 
     private void loadVehicle() {
@@ -277,11 +285,11 @@ public class AddService extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(1280, 720));
         getContentPane().setLayout(null);
 
-        jPanel1.setBackground(new java.awt.Color(0, 101, 211));
+        jPanel1.setBackground(new java.awt.Color(27, 92, 131));
         jPanel1.setAlignmentX(0.0F);
 
         jLabel3.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("      Logout");
         jLabel3.setToolTipText("");
@@ -327,7 +335,7 @@ public class AddService extends javax.swing.JFrame {
         });
 
         jLabel7.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("      Service");
         jLabel7.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -340,7 +348,6 @@ public class AddService extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 3, 30)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("SiBengkel");
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -387,7 +394,7 @@ public class AddService extends javax.swing.JFrame {
         getContentPane().add(jPanel1);
         jPanel1.setBounds(0, 0, 280, 840);
 
-        jPanel7.setBackground(new java.awt.Color(0, 122, 255));
+        jPanel7.setBackground(new java.awt.Color(34, 116, 165));
         jPanel7.setAlignmentX(0.0F);
 
         jLabel8.setBackground(new java.awt.Color(0, 0, 0));
@@ -416,25 +423,25 @@ public class AddService extends javax.swing.JFrame {
         jPanel7.setBounds(280, 0, 1270, 108);
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel9.setText("Add New Service");
+        jLabel9.setText("Add new service");
         getContentPane().add(jLabel9);
         jLabel9.setBounds(320, 110, 210, 80);
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel10.setText("Used Sparepart");
+        jLabel10.setText("Used sparepart");
         getContentPane().add(jLabel10);
         jLabel10.setBounds(770, 140, 230, 32);
 
         jComboBox1.setFocusCycleRoot(true);
         getContentPane().add(jComboBox1);
-        jComboBox1.setBounds(480, 200, 240, 22);
+        jComboBox1.setBounds(480, 200, 240, 26);
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel11.setText("Vehicle");
         getContentPane().add(jLabel11);
         jLabel11.setBounds(320, 200, 60, 20);
         getContentPane().add(jTextField1);
-        jTextField1.setBounds(480, 250, 240, 22);
+        jTextField1.setBounds(480, 250, 240, 26);
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel12.setText("Service Type");
@@ -446,7 +453,7 @@ public class AddService extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTextArea1);
 
         getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(480, 300, 234, 130);
+        jScrollPane1.setBounds(480, 300, 238, 130);
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel13.setText("Description");
@@ -458,11 +465,18 @@ public class AddService extends javax.swing.JFrame {
         getContentPane().add(jLabel14);
         jLabel14.setBounds(320, 460, 110, 20);
         getContentPane().add(jTextField3);
-        jTextField3.setBounds(480, 460, 240, 22);
+        jTextField3.setBounds(480, 460, 240, 26);
 
-        jButton1.setText("ADD");
+        jButton1.setBackground(new java.awt.Color(242, 208, 164));
+        jButton1.setForeground(new java.awt.Color(51, 51, 51));
+        jButton1.setText("Submit");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         getContentPane().add(jButton1);
-        jButton1.setBounds(320, 540, 72, 23);
+        jButton1.setBounds(320, 540, 90, 30);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -515,6 +529,10 @@ public class AddService extends javax.swing.JFrame {
         cst.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel2MouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
