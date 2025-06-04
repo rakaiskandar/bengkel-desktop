@@ -15,6 +15,7 @@ import utils.Session;
 import models.Vehicle;
 import models.ServiceRecord;
 import models.SparePart;
+import services.ServiceDetailService;
 import services.SparePartService;
 import views.CustomerView;
 import views.DashboardView;
@@ -35,7 +36,6 @@ public class EditService extends javax.swing.JFrame {
     private int serviceRecordId;
 
     private javax.swing.JPanel panelUsedSparepart;
-    private javax.swing.JButton btnAddSparepart;
     private JScrollPane scrollPaneSparepart;
 
     public EditService() {
@@ -59,15 +59,11 @@ public class EditService extends javax.swing.JFrame {
         panelUsedSparepart.setLayout(new BoxLayout(panelUsedSparepart, BoxLayout.Y_AXIS));
 
         scrollPaneSparepart = new JScrollPane(panelUsedSparepart);
-        scrollPaneSparepart.setBounds(770, 250, 300, 240);
+        scrollPaneSparepart.setBounds(770, 200, 400, 280);
         scrollPaneSparepart.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         getContentPane().add(scrollPaneSparepart);
 
-        btnAddSparepart = new javax.swing.JButton("Tambah Sparepart");
-        btnAddSparepart.setBounds(770, 200, 200, 27);
-        getContentPane().add(btnAddSparepart);
-
-        btnAddSparepart.addActionListener(e -> addSparepartRow(new ServiceDetail()));
+        jButton2.addActionListener(e -> addSparepartRow(new ServiceDetail()));
     }
 
     public EditService(int id) {
@@ -187,9 +183,14 @@ public class EditService extends javax.swing.JFrame {
         JPanel rowPanel = new JPanel();
         rowPanel.setLayout(new java.awt.FlowLayout(FlowLayout.LEFT));
         rowPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                
+        JLabel labelPrice = new JLabel("Price");
+        JTextField priceField = new JTextField(5);
+        priceField.setEditable(false);
 
-        JLabel labelNama = new JLabel("Sparepart:");
+        JLabel labelNama = new JLabel("Name");
         JComboBox<SparePart> comboSparepart = new JComboBox<>();
+        comboSparepart.setPreferredSize(new Dimension(110, 30));
 
         // Ambil data sparepart dari database
         SparePartService sparePartService = new SparePartService();
@@ -201,13 +202,20 @@ public class EditService extends javax.swing.JFrame {
                 selectedPart = sp;
             }
         }
-
+        
+        comboSparepart.addActionListener(e -> {
+            SparePart selected = (SparePart) comboSparepart.getSelectedItem();
+            if (selected != null) {
+                priceField.setText(String.valueOf(selected.getPrice()));
+            }
+        });
+        
         if (selectedPart != null) {
             comboSparepart.setSelectedItem(selectedPart);
         }
 
-        JLabel labelQty = new JLabel("Qty:");
-        JTextField qtyField = new JTextField(5);
+        JLabel labelQty = new JLabel("Qty");
+        JTextField qtyField = new JTextField(2);
         qtyField.setText(String.valueOf(detail.getQuantity()));
 
         JButton deleteButton = new JButton("X");
@@ -221,11 +229,15 @@ public class EditService extends javax.swing.JFrame {
             panelUsedSparepart.repaint();
         });
 
-        labelNama.setFont(new java.awt.Font("Segoe UI", 0, 14));
-        labelQty.setFont(new java.awt.Font("Segoe UI", 0, 14));
+//        labelNama.setFont(new java.awt.Font("Segoe UI", 0, 14));
+//        labelQty.setFont(new java.awt.Font("Segoe UI", 0, 14));
+//        labelPrice.setFont(new java.awt.Font("Segoe UI", 0, 14));
+
 
         rowPanel.add(labelNama);
         rowPanel.add(comboSparepart);
+        rowPanel.add(labelPrice);
+        rowPanel.add(priceField);
         rowPanel.add(labelQty);
         rowPanel.add(qtyField);
         rowPanel.add(deleteButton);
@@ -270,6 +282,7 @@ public class EditService extends javax.swing.JFrame {
         jLabel14 = new javax.swing.JLabel();
         jTextField3 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -452,7 +465,7 @@ public class EditService extends javax.swing.JFrame {
         jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel10.setText("Used Sparepart");
         getContentPane().add(jLabel10);
-        jLabel10.setBounds(770, 140, 230, 32);
+        jLabel10.setBounds(770, 110, 180, 80);
 
         jComboBox1.setFocusCycleRoot(true);
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
@@ -488,7 +501,7 @@ public class EditService extends javax.swing.JFrame {
         jLabel13.setBounds(320, 300, 110, 20);
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel14.setText("Total Cost");
+        jLabel14.setText("Additional Cost");
         getContentPane().add(jLabel14);
         jLabel14.setBounds(320, 460, 110, 20);
 
@@ -511,6 +524,15 @@ public class EditService extends javax.swing.JFrame {
         });
         getContentPane().add(jButton1);
         jButton1.setBounds(320, 540, 90, 30);
+
+        jButton2.setText("Add sparepart");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton2);
+        jButton2.setBounds(960, 140, 110, 27);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -580,6 +602,10 @@ public class EditService extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField3ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -633,6 +659,7 @@ public class EditService extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JComboBox<Vehicle> jComboBox1;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JFrame jFrame2;
