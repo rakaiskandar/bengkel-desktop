@@ -12,6 +12,7 @@ import services.ServiceDetailService;
  * @author HP
  */
 public class ServiceRecord {
+
     protected int id;
     protected int vehicleId;
     protected String type;
@@ -20,7 +21,7 @@ public class ServiceRecord {
 
     public ServiceRecord() {
     }
-    
+
     public ServiceRecord(int vehicleId, String type, String description, double cost) {
         this.vehicleId = vehicleId;
         this.type = type;
@@ -75,11 +76,19 @@ public class ServiceRecord {
     public void setCost(double cost) {
         this.cost = cost;
     }
-    
+
+    private List<ServiceDetail> details;
+
+    public void setDetails(List<ServiceDetail> details) {
+        this.details = details;
+    }
+
     public List<ServiceDetail> getDetails() {
+        if (this.details != null) {
+            return this.details;
+        }
         ServiceDetailService sds = new ServiceDetailService();
-        // Pastikan panggil getId(), bukan direct this.id
         return sds.getByServiceId(this.getId());
     }
-    
+
 }

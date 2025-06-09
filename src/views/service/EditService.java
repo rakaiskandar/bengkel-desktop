@@ -50,7 +50,7 @@ public class EditService extends javax.swing.JFrame {
         Image image = originalIcon.getImage().getScaledInstance(200, 32, Image.SCALE_SMOOTH);
         ImageIcon resizedIcon = new ImageIcon(image);
         jLabel1.setIcon(resizedIcon);
-        
+
         initSparepartPanel();
     }
 
@@ -76,13 +76,30 @@ public class EditService extends javax.swing.JFrame {
         ServiceRecordService service = new ServiceRecordService();
         ServiceRecord sr = service.getById(id);
         if (sr != null) {
-            jComboBox1.setSelectedItem(sr.getVehicleId());
+            // Load vehicle list dulu
+            VehicleService vehicleService = new VehicleService();
+            List<Vehicle> vehicleList = vehicleService.getAllVehicles();
+
+            // Cari Vehicle yang sesuai dengan id
+            Vehicle selectedVehicle = null;
+            for (Vehicle v : vehicleList) {
+                if (v.getId() == sr.getVehicleId()) {
+                    selectedVehicle = v;
+                    break;
+                }
+            }
+
+            if (selectedVehicle != null) {
+                jComboBox1.setModel(new DefaultComboBoxModel<>(vehicleList.toArray(new Vehicle[0])));
+                jComboBox1.setSelectedItem(selectedVehicle);
+            }
+
             jTextField1.setText(sr.getType());
             jTextArea1.setText(sr.getDescription());
             jTextField3.setText(String.valueOf(sr.getCost()));
 
             // Tampilkan spareparts yang digunakan sebelumnya
-            List<ServiceDetail> details = sr.getDetails(); // Pastikan ServiceRecord punya method ini
+            List<ServiceDetail> details = sr.getDetails();
             if (details != null) {
                 for (ServiceDetail detail : details) {
                     addSparepartRow(detail);
@@ -93,6 +110,7 @@ public class EditService extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Data sparepart tidak ditemukan.", "Error", JOptionPane.ERROR_MESSAGE);
             dispose();
         }
+        updateTotalCost();
     }
 
     private void saveData() {
@@ -158,6 +176,15 @@ public class EditService extends javax.swing.JFrame {
         boolean success = service.updateService(sr);
 
         if (success) {
+            ServiceDetailService detailService = new ServiceDetailService();
+            // Hapus semua detail lama
+            detailService.deleteByServiceId(serviceRecordId);
+
+            // Tambah detail baru
+            for (ServiceDetail detail : serviceDetails) {
+                detail.setServiceId(serviceRecordId);
+                detailService.addServiceDetail(detail);
+            }
             JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan.");
             ServiceView s = new ServiceView();
             s.setLocationRelativeTo(null);
@@ -180,10 +207,9 @@ public class EditService extends javax.swing.JFrame {
     }
 
     private void addSparepartRow(ServiceDetail detail) {
-        JPanel rowPanel = new JPanel();
-        rowPanel.setLayout(new java.awt.FlowLayout(FlowLayout.LEFT));
+        JPanel rowPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         rowPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-                
+
         JLabel labelPrice = new JLabel("Price");
         JTextField priceField = new JTextField(5);
         priceField.setEditable(false);
@@ -192,7 +218,6 @@ public class EditService extends javax.swing.JFrame {
         JComboBox<SparePart> comboSparepart = new JComboBox<>();
         comboSparepart.setPreferredSize(new Dimension(110, 30));
 
-        // Ambil data sparepart dari database
         SparePartService sparePartService = new SparePartService();
         List<SparePart> spareParts = sparePartService.getAllSpareParts();
         SparePart selectedPart = null;
@@ -202,21 +227,46 @@ public class EditService extends javax.swing.JFrame {
                 selectedPart = sp;
             }
         }
-        
+
         comboSparepart.addActionListener(e -> {
             SparePart selected = (SparePart) comboSparepart.getSelectedItem();
             if (selected != null) {
                 priceField.setText(String.valueOf(selected.getPrice()));
+                updateTotalCost();
             }
         });
-        
-        if (selectedPart != null) {
-            comboSparepart.setSelectedItem(selectedPart);
-        }
 
         JLabel labelQty = new JLabel("Qty");
         JTextField qtyField = new JTextField(2);
         qtyField.setText(String.valueOf(detail.getQuantity()));
+
+        qtyField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                updateTotalCost();
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                updateTotalCost();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                updateTotalCost();
+            }
+        });
+
+        qtyField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent e) {
+                updateTotalCost();
+            }
+        });
+
+        if (selectedPart != null) {
+            comboSparepart.setSelectedItem(selectedPart);
+        } else if (!spareParts.isEmpty()) {
+            comboSparepart.setSelectedIndex(0);
+            priceField.setText(String.valueOf(spareParts.get(0).getPrice()));
+        }
 
         JButton deleteButton = new JButton("X");
         deleteButton.setForeground(Color.RED);
@@ -227,12 +277,8 @@ public class EditService extends javax.swing.JFrame {
             panelUsedSparepart.remove(rowPanel);
             panelUsedSparepart.revalidate();
             panelUsedSparepart.repaint();
+            updateTotalCost();  // update juga saat dihapus
         });
-
-//        labelNama.setFont(new java.awt.Font("Segoe UI", 0, 14));
-//        labelQty.setFont(new java.awt.Font("Segoe UI", 0, 14));
-//        labelPrice.setFont(new java.awt.Font("Segoe UI", 0, 14));
-
 
         rowPanel.add(labelNama);
         rowPanel.add(comboSparepart);
@@ -245,6 +291,40 @@ public class EditService extends javax.swing.JFrame {
         panelUsedSparepart.add(rowPanel);
         panelUsedSparepart.revalidate();
         panelUsedSparepart.repaint();
+    }
+
+    private void updateTotalCost() {
+        double totalCost = 0.0;
+
+        for (Component comp : panelUsedSparepart.getComponents()) {
+            if (comp instanceof JPanel rowPanel) {
+                JComboBox<SparePart> combo = null;
+                JTextField qtyField = null;
+
+                for (Component rowComp : rowPanel.getComponents()) {
+                    if (rowComp instanceof JComboBox<?> c && c.getSelectedItem() instanceof SparePart) {
+                        combo = (JComboBox<SparePart>) c;
+                    } else if (rowComp instanceof JTextField t) {
+                        // Asumsikan qtyField adalah JTextField editable (karena priceField tidak editable)
+                        if (t.isEditable()) {
+                            qtyField = t;
+                        }
+                    }
+                }
+
+                if (combo != null && qtyField != null) {
+                    try {
+                        SparePart part = (SparePart) combo.getSelectedItem();
+                        int qty = Integer.parseInt(qtyField.getText());
+                        totalCost += part.getPrice() * qty;
+                    } catch (NumberFormatException e) {
+                        // Abaikan error parse qty kosong
+                    }
+                }
+            }
+        }
+
+        jTextField3.setText(String.valueOf(totalCost));
     }
 
     /**
@@ -474,14 +554,14 @@ public class EditService extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jComboBox1);
-        jComboBox1.setBounds(480, 200, 240, 26);
+        jComboBox1.setBounds(480, 200, 240, 22);
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel11.setText("Vehicle");
         getContentPane().add(jLabel11);
         jLabel11.setBounds(320, 200, 60, 20);
         getContentPane().add(jTextField1);
-        jTextField1.setBounds(480, 250, 240, 26);
+        jTextField1.setBounds(480, 250, 240, 22);
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel12.setText("Service Type");
@@ -493,7 +573,7 @@ public class EditService extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTextArea1);
 
         getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(480, 300, 238, 130);
+        jScrollPane1.setBounds(480, 300, 234, 130);
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel13.setText("Description");
@@ -501,7 +581,7 @@ public class EditService extends javax.swing.JFrame {
         jLabel13.setBounds(320, 300, 110, 20);
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel14.setText("Additional Cost");
+        jLabel14.setText("Cost");
         getContentPane().add(jLabel14);
         jLabel14.setBounds(320, 460, 110, 20);
 
@@ -512,7 +592,7 @@ public class EditService extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jTextField3);
-        jTextField3.setBounds(480, 460, 240, 26);
+        jTextField3.setBounds(480, 460, 240, 22);
 
         jButton1.setBackground(new java.awt.Color(242, 208, 164));
         jButton1.setForeground(new java.awt.Color(51, 51, 51));
@@ -532,7 +612,7 @@ public class EditService extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton2);
-        jButton2.setBounds(960, 140, 110, 27);
+        jButton2.setBounds(960, 140, 110, 23);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

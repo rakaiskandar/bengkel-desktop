@@ -17,4 +17,5 @@ public interface ServiceDetailInterface {
     boolean addServiceDetail(ServiceDetail detail);
     boolean updateServiceDetail(ServiceDetail detail);
     boolean deleteServiceDetail(int id);
+    boolean deleteByServiceId(int serviceId);
 }

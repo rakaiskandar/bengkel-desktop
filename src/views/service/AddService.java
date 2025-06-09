@@ -114,8 +114,8 @@ public class AddService extends javax.swing.JFrame {
 
         // Hitung total biaya sparepart
         ServiceRecordService service = new ServiceRecordService();
-        double totalSpareCost = service.calculateSpareCost(serviceDetails) + Double.parseDouble(cost);
-        
+        double totalSpareCost = service.calculateSpareCost(serviceDetails);
+
         // Simpan ServiceRecord
         ServiceRecord sr = new ServiceRecord(selectedVehicle.getId(), servType, desc, totalSpareCost);
         boolean success = service.addService(sr);
@@ -162,11 +162,9 @@ public class AddService extends javax.swing.JFrame {
     }
 
     private void addSparepartRow(ServiceDetail detail) {
-        JPanel rowPanel = new JPanel();
-        rowPanel.setLayout(new java.awt.FlowLayout(FlowLayout.LEFT));
+        JPanel rowPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         rowPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        
-        
+
         JLabel labelPrice = new JLabel("Price");
         JTextField priceField = new JTextField(5);
         priceField.setEditable(false);
@@ -175,7 +173,6 @@ public class AddService extends javax.swing.JFrame {
         JComboBox<SparePart> comboSparepart = new JComboBox<>();
         comboSparepart.setPreferredSize(new Dimension(110, 30));
 
-        // Ambil data sparepart dari database
         SparePartService sparePartService = new SparePartService();
         List<SparePart> spareParts = sparePartService.getAllSpareParts();
         SparePart selectedPart = null;
@@ -185,21 +182,46 @@ public class AddService extends javax.swing.JFrame {
                 selectedPart = sp;
             }
         }
-        
+
         comboSparepart.addActionListener(e -> {
             SparePart selected = (SparePart) comboSparepart.getSelectedItem();
             if (selected != null) {
                 priceField.setText(String.valueOf(selected.getPrice()));
+                updateTotalCost();
             }
         });
-        
-        if (selectedPart != null) {
-            comboSparepart.setSelectedItem(selectedPart);
-        }
 
         JLabel labelQty = new JLabel("Qty");
         JTextField qtyField = new JTextField(2);
         qtyField.setText(String.valueOf(detail.getQuantity()));
+
+        qtyField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                updateTotalCost();
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                updateTotalCost();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                updateTotalCost();
+            }
+        });
+
+        qtyField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent e) {
+                updateTotalCost();
+            }
+        });
+
+        if (selectedPart != null) {
+            comboSparepart.setSelectedItem(selectedPart);
+        } else if (!spareParts.isEmpty()) {
+            comboSparepart.setSelectedIndex(0);
+            priceField.setText(String.valueOf(spareParts.get(0).getPrice()));
+        }
 
         JButton deleteButton = new JButton("X");
         deleteButton.setForeground(Color.RED);
@@ -210,11 +232,8 @@ public class AddService extends javax.swing.JFrame {
             panelUsedSparepart.remove(rowPanel);
             panelUsedSparepart.revalidate();
             panelUsedSparepart.repaint();
+            updateTotalCost();  // update juga saat dihapus
         });
-
-//        labelNama.setFont(new java.awt.Font("Segoe UI", 0, 14));
-//        labelQty.setFont(new java.awt.Font("Segoe UI", 0, 14));
-//        labelPrice.setFont(new java.awt.Font("Segoe UI", 0, 14));
 
         rowPanel.add(labelNama);
         rowPanel.add(comboSparepart);
@@ -229,6 +248,39 @@ public class AddService extends javax.swing.JFrame {
         panelUsedSparepart.repaint();
     }
 
+    private void updateTotalCost() {
+        double totalCost = 0.0;
+
+        for (Component comp : panelUsedSparepart.getComponents()) {
+            if (comp instanceof JPanel rowPanel) {
+                JComboBox<SparePart> combo = null;
+                JTextField qtyField = null;
+
+                for (Component rowComp : rowPanel.getComponents()) {
+                    if (rowComp instanceof JComboBox<?> c && c.getSelectedItem() instanceof SparePart) {
+                        combo = (JComboBox<SparePart>) c;
+                    } else if (rowComp instanceof JTextField t) {
+                        // Asumsikan qtyField adalah JTextField editable (karena priceField tidak editable)
+                        if (t.isEditable()) {
+                            qtyField = t;
+                        }
+                    }
+                }
+
+                if (combo != null && qtyField != null) {
+                    try {
+                        SparePart part = (SparePart) combo.getSelectedItem();
+                        int qty = Integer.parseInt(qtyField.getText());
+                        totalCost += part.getPrice() * qty;
+                    } catch (NumberFormatException e) {
+                        // Abaikan error parse qty kosong
+                    }
+                }
+            }
+        }
+
+        jTextField3.setText(String.valueOf(totalCost));
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -421,7 +473,7 @@ public class AddService extends javax.swing.JFrame {
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addGap(27, 27, 27)
                 .addComponent(jLabel8)
-                .addContainerGap(1064, Short.MAX_VALUE))
+                .addContainerGap(1062, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -446,14 +498,14 @@ public class AddService extends javax.swing.JFrame {
 
         jComboBox1.setFocusCycleRoot(true);
         getContentPane().add(jComboBox1);
-        jComboBox1.setBounds(480, 200, 240, 26);
+        jComboBox1.setBounds(480, 200, 240, 22);
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel11.setText("Vehicle");
         getContentPane().add(jLabel11);
         jLabel11.setBounds(320, 200, 60, 20);
         getContentPane().add(jTextField1);
-        jTextField1.setBounds(480, 250, 240, 26);
+        jTextField1.setBounds(480, 250, 240, 22);
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel12.setText("Service Type");
@@ -465,7 +517,7 @@ public class AddService extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTextArea1);
 
         getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(480, 300, 238, 130);
+        jScrollPane1.setBounds(480, 300, 234, 130);
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel13.setText("Description");
@@ -473,13 +525,11 @@ public class AddService extends javax.swing.JFrame {
         jLabel13.setBounds(320, 300, 110, 20);
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel14.setText("Additional Cost");
+        jLabel14.setText("Cost");
         getContentPane().add(jLabel14);
         jLabel14.setBounds(320, 460, 110, 20);
-
-        jTextField3.setText("0");
         getContentPane().add(jTextField3);
-        jTextField3.setBounds(480, 460, 240, 26);
+        jTextField3.setBounds(480, 460, 240, 22);
 
         jButton1.setBackground(new java.awt.Color(242, 208, 164));
         jButton1.setForeground(new java.awt.Color(51, 51, 51));
@@ -499,7 +549,7 @@ public class AddService extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton2);
-        jButton2.setBounds(950, 140, 110, 27);
+        jButton2.setBounds(950, 140, 110, 23);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

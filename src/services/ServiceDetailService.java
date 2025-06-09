@@ -23,7 +23,7 @@ public class ServiceDetailService implements ServiceDetailInterface {
     @Override
     public ServiceDetail getById(int id) {
         String sql = "SELECT * FROM service_details WHERE id = ?";
-        try ( ResultSet rs = db.selectQuery(sql, id)) {
+        try (ResultSet rs = db.selectQuery(sql, id)) {
             if (rs.next()) {
                 return new ServiceDetail(
                         rs.getInt("id"),
@@ -42,7 +42,7 @@ public class ServiceDetailService implements ServiceDetailInterface {
     public List<ServiceDetail> getByServiceId(int serviceId) {
         List<ServiceDetail> list = new ArrayList<>();
         String sql = "SELECT * FROM service_details WHERE service_id = ?";
-        try ( ResultSet rs = db.selectQuery(sql, serviceId)) {
+        try (ResultSet rs = db.selectQuery(sql, serviceId)) {
             while (rs.next()) {
                 list.add(new ServiceDetail(
                         rs.getInt("id"),
@@ -61,7 +61,7 @@ public class ServiceDetailService implements ServiceDetailInterface {
     public List<ServiceDetail> getAll() {
         List<ServiceDetail> list = new ArrayList<>();
         String sql = "SELECT * FROM service_details";
-        try ( ResultSet rs = db.selectQuery(sql)) {
+        try (ResultSet rs = db.selectQuery(sql)) {
             while (rs.next()) {
                 list.add(new ServiceDetail(
                         rs.getInt("id"),
@@ -93,5 +93,11 @@ public class ServiceDetailService implements ServiceDetailInterface {
         String sql = "DELETE FROM service_details WHERE id = ?";
         return db.executeUpdate(sql, id) > 0;
     }
-    
+
+    @Override
+    public boolean deleteByServiceId(int serviceId) {
+        String sql = "DELETE FROM service_details WHERE service_id = ?";
+        return db.executeUpdate(sql, serviceId) > 0;
+    }
+
 }
